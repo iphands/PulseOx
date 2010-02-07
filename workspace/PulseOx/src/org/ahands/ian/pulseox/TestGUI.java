@@ -1,8 +1,11 @@
 package org.ahands.ian.pulseox;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -19,7 +22,7 @@ public class TestGUI {
 
 	public TestGUI(Display display) {
 
-		Shell shell = new Shell(display);
+		Shell shell = new Shell(display, SWT.SHELL_TRIM);
 		shell.setText("PulseOx");
 		shell.setSize(320, 240);
 
@@ -28,8 +31,9 @@ public class TestGUI {
 
 		shell.open();
 
-		Thread guiUpdate = new Thread(new FileListener(display, shell,
-				heartBPMLabel, oxySatLabel, oxygenSatGroup, heartRateGroup));
+		FileListener fileListener = new FileListener(display, shell,
+				heartBPMLabel, oxySatLabel, oxygenSatGroup, heartRateGroup);
+		Thread guiUpdate = new Thread(fileListener);
 
 		guiUpdate.start();
 
@@ -50,22 +54,32 @@ public class TestGUI {
 		vertRowLayout.spacing = 10;
 		shell.setLayout(vertRowLayout);
 
-		Composite topComp = new Composite(shell, SWT.BORDER);
-		topComp.setLayout(new RowLayout(SWT.HORIZONTAL));
+		Composite topComp = new Composite(shell, SWT.BORDER | SWT.FILL);
+		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN);
-		heartRateGroup.setText("Hear Rate");
+		Font initialFont = shell.getFont();
+		FontData[] fontData = initialFont.getFontData();
+		for (FontData fontD : fontData) {
+			fontD.setHeight(30);
+		}
+
+		Font bigFont = new Font(Display.getCurrent(), fontData);
+
+		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
+		heartRateGroup.setText("Heart Rate");
 
 		heartBPMLabel = new Label(heartRateGroup, SWT.CENTER);
+		heartBPMLabel.setFont(bigFont);
 		heartBPMLabel.setText("--");
-		heartBPMLabel.setBounds(20, 20, 20, 20);
+		heartBPMLabel.setBounds(20, 20, 80, 40);
 
 		oxygenSatGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN);
 		oxygenSatGroup.setText("Oxygen Saturation");
 
 		oxySatLabel = new Label(oxygenSatGroup, SWT.CENTER);
+		oxySatLabel.setFont(bigFont);
 		oxySatLabel.setText("--");
-		oxySatLabel.setBounds(20, 20, 20, 20);
+		oxySatLabel.setBounds(20, 20, 80, 40);
 
 		Composite bottomComp = new Composite(shell, SWT.BORDER);
 		bottomComp.setLayout(new RowLayout(SWT.FILL));
