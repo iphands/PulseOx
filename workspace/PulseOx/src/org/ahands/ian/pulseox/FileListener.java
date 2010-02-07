@@ -27,6 +27,8 @@ public class FileListener implements Runnable {
 	int heartRate;
 	int oxygenSat;
 
+	boolean keepRunning = true;
+
 	public FileListener(Display display, Shell shell, Label heartBPMLabel,
 			Label oxySatLabel, Group oxygenSatGroup, Group heartRateGroup) {
 
@@ -36,6 +38,11 @@ public class FileListener implements Runnable {
 		this.oxySatLabel = oxySatLabel;
 		this.oxygenSatGroup = oxygenSatGroup;
 		this.heartRateGroup = heartRateGroup;
+	}
+
+	public void endThread() {
+		keepRunning = false;
+		return;
 	}
 
 	public void run() {
@@ -49,7 +56,7 @@ public class FileListener implements Runnable {
 			e.printStackTrace();
 		}
 
-		while (true) {
+		while (!shell.isDisposed()) {
 			try {
 				if ((controlInt = deviceReader.read()) > 127) {
 					waveY = deviceReader.read();
