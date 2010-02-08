@@ -84,6 +84,7 @@ public class FileListener implements Runnable {
 
 		int x = 0;
 
+		System.out.println("BPM, o2");
 		while (!shell.isDisposed()) {
 
 			try {
@@ -92,6 +93,8 @@ public class FileListener implements Runnable {
 					waveX = deviceReader.read();
 					heartRate = deviceReader.read();
 					oxygenSat = deviceReader.read();
+
+					System.out.println(heartRate + "," + oxygenSat);
 
 					if (x >= 200) {
 						x = 0;
