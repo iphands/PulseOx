@@ -115,7 +115,8 @@ public class FileListener implements Runnable {
 						// gc.setForeground(new Color(display, 0, 255, 0));
 						// }
 
-						gc.drawLine(x, waveY, x - 1, old_y);
+						// gc.drawLine(x, waveY, x - 1, old_y);
+						gc.drawPoint(x, waveY);
 						x++;
 					}
 
