@@ -2,11 +2,13 @@ package org.ahands.ian.pulseox;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -26,6 +28,9 @@ public class FileListener implements Runnable {
 	int waveX;
 	int heartRate;
 	int oxygenSat;
+	Canvas canvas;
+	GC gc;
+	int[] coord = new int[] { 0, 0 };
 
 	boolean keepRunning = true;
 
@@ -40,9 +45,19 @@ public class FileListener implements Runnable {
 		this.heartRateGroup = heartRateGroup;
 	}
 
+	public void setGC(GC gc, Canvas canvas) {
+		this.gc = gc;
+		this.canvas = canvas;
+		return;
+	}
+
 	public void endThread() {
 		keepRunning = false;
 		return;
+	}
+
+	public int[] getPoint() {
+		return coord;
 	}
 
 	public void run() {
@@ -56,11 +71,18 @@ public class FileListener implements Runnable {
 
 				Thread.sleep(250);
 			} catch (Exception e) {
+				try {
+					deviceReader.close();
+				} catch (IOException e1) {
 
+				}
 			}
 		}
 
+		int x = 0;
+
 		while (!shell.isDisposed()) {
+
 			try {
 				if ((controlInt = deviceReader.read()) > 127) {
 					waveY = deviceReader.read();
@@ -68,11 +90,18 @@ public class FileListener implements Runnable {
 					heartRate = deviceReader.read();
 					oxygenSat = deviceReader.read();
 
-					System.out.println("contr: " + controlInt);
-					System.out.println("wavex: " + waveY);
-					System.out.println("wavey: " + waveX);
-					System.out.println("pulse: " + heartRate);
-					System.out.println("oxy  : " + oxygenSat + "\n");
+					if (x >= 200) {
+						x = 1;
+					} else {
+						gc.drawPoint(x, waveY);
+						x++;
+					}
+
+					// System.out.println("contr: " + controlInt);
+					// System.out.println("wavex: " + waveY);
+					// System.out.println("wavey: " + waveX);
+					// System.out.println("pulse: " + heartRate);
+					// System.out.println("oxy  : " + oxygenSat + "\n");
 
 					if (heartRate < 40) {
 						heartRate += 127;
@@ -119,8 +148,7 @@ public class FileListener implements Runnable {
 				}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

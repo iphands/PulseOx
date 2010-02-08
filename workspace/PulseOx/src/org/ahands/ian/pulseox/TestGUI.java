@@ -1,12 +1,17 @@
 package org.ahands.ian.pulseox;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -20,19 +25,23 @@ public class TestGUI {
 	Group heartRateGroup;
 	Group oxygenSatGroup;
 
+	Canvas canvas;
+	GC gc;
+	FileListener fileListener;
+
 	public TestGUI(Display display) {
 
 		Shell shell = new Shell(display, SWT.SHELL_TRIM);
 		shell.setText("PulseOx");
-		shell.setSize(320, 240);
+		shell.setSize(420, 400);
 
 		center(shell);
 		initUI(shell);
 
 		shell.open();
 
-		FileListener fileListener = new FileListener(display, shell,
-				heartBPMLabel, oxySatLabel, oxygenSatGroup, heartRateGroup);
+		fileListener = new FileListener(display, shell, heartBPMLabel,
+				oxySatLabel, oxygenSatGroup, heartRateGroup);
 		Thread guiUpdate = new Thread(fileListener);
 
 		guiUpdate.start();
@@ -86,6 +95,21 @@ public class TestGUI {
 
 		Group waveFormGroup = new Group(bottomComp, SWT.SHADOW_ETCHED_IN);
 		waveFormGroup.setText("Wave Form");
+
+		canvas = new Canvas(waveFormGroup, SWT.NONE);
+		canvas.setSize(200, 128);
+		canvas.setLocation(5, 20);
+		canvas.setBackground(new Color(Display.getCurrent(), 0, 0, 0));
+		canvas.addPaintListener(new PaintListener() {
+			@Override
+			public void paintControl(PaintEvent pEvent) {
+				gc = new GC(canvas);
+				gc
+						.setForeground(pEvent.display
+								.getSystemColor(SWT.COLOR_GREEN));
+				fileListener.setGC(gc, canvas);
+			}
+		});
 	}
 
 	public void center(Shell shell) {
