@@ -35,7 +35,7 @@ public class FileListener implements Runnable {
 
 	int[] coord = new int[] { 0, 0 };
 
-	boolean keepRunning = true;
+	// boolean keepRunning = true;
 
 	public FileListener(Display display, Shell shell, Label heartBPMLabel,
 			Label oxySatLabel, Group oxygenSatGroup, Group heartRateGroup) {
@@ -55,10 +55,10 @@ public class FileListener implements Runnable {
 		return;
 	}
 
-	public void endThread() {
-		keepRunning = false;
-		return;
-	}
+	// public void endThread() {
+	// keepRunning = false;
+	// return;
+	// }
 
 	public int[] getPoint() {
 		return coord;
