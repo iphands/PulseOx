@@ -142,7 +142,7 @@ public class FileListener implements Runnable {
 					System.out.println("debug: waiting for control character ("
 							+ controlInt + ")");
 
-					Thread.sleep(5);
+					Thread.sleep(10);
 				}
 
 			} catch (IOException e) {
