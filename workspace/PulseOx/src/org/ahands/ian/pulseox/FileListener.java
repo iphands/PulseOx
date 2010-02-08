@@ -136,7 +136,7 @@ public class FileListener implements Runnable {
 						}
 					});
 
-					Thread.sleep(5);
+					Thread.sleep(20);
 
 				} else {
 					System.out.println("debug: waiting for control character ("
