@@ -73,8 +73,17 @@ public class FileListener implements Runnable {
 				deviceReader = new BufferedReader(new FileReader(new File(
 						DEVICE)));
 
+			} catch (IOException e) {
+
+				System.out.println("Unable to open " + DEVICE
+						+ " trying again...");
+			}
+
+			try {
 				Thread.sleep(250);
-			} catch (Exception e) {
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
@@ -163,8 +172,14 @@ public class FileListener implements Runnable {
 				}
 
 			} catch (IOException e) {
-
 			} catch (InterruptedException e) {
+			}
+		}
+
+		if (deviceReader != null) {
+			try {
+				deviceReader.close();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
