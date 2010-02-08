@@ -88,26 +88,30 @@ public class FileListener implements Runnable {
 		}
 
 		int x = 0;
+		int y = 0;
 		int old_y = 0;
+		final int Y_MAX = 127;
+		final int X_MAX = 200;
 
 		System.out.println("BPM, o2");
 		while (!shell.isDisposed()) {
 
 			try {
-				if ((controlInt = deviceReader.read()) > 127) {
-					old_y = waveY;
+				if ((controlInt = deviceReader.read()) > Y_MAX) {
+					old_y = y;
 					waveY = deviceReader.read();
+					y = Y_MAX - waveY;
 					waveX = deviceReader.read();
 					heartRate = deviceReader.read();
 					oxygenSat = deviceReader.read();
 
 					System.out.println(heartRate + "," + oxygenSat);
 
-					if (x >= 200) {
+					if (x >= X_MAX) {
 						x = 0;
 						gc.setForeground(new Color(display, 0, 0, 0));
-						gc.drawLine(0, 0, 0, 127);
-						gc.drawLine(1, 0, 1, 127);
+						gc.drawLine(0, 0, 0, Y_MAX);
+						gc.drawLine(1, 0, 1, Y_MAX);
 						gc.setForeground(new Color(display, 0, 255, 0));
 						// gc.fillRectangle(canvasRect);
 					} else {
@@ -115,15 +119,16 @@ public class FileListener implements Runnable {
 
 						if (x > 0) {
 							gc.setForeground(new Color(display, 0, 0, 0));
-							gc.drawLine(x + 1, 0, x + 1, 127);
+							gc.drawLine(x + 1, 0, x + 1, Y_MAX);
 							gc.setForeground(new Color(display, 0, 255, 0));
 						}
 
 						try {
-							gc.drawLine(x, waveY, x - 1, old_y);
+							gc.drawLine(x, y, x - 1, old_y);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
+
 						// gc.drawPoint(x, waveY);
 						x++;
 					}
