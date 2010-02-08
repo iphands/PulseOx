@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -24,7 +25,7 @@ public class FileListener implements Runnable {
 	Group oxygenSatGroup = null;
 
 	int controlInt = 134;
-	int waveY;
+	int waveY = 0;
 	int waveX;
 	int heartRate;
 	int oxygenSat;
@@ -83,12 +84,14 @@ public class FileListener implements Runnable {
 		}
 
 		int x = 0;
+		int old_y = 0;
 
 		System.out.println("BPM, o2");
 		while (!shell.isDisposed()) {
 
 			try {
 				if ((controlInt = deviceReader.read()) > 127) {
+					old_y = waveY;
 					waveY = deviceReader.read();
 					waveX = deviceReader.read();
 					heartRate = deviceReader.read();
@@ -100,7 +103,18 @@ public class FileListener implements Runnable {
 						x = 0;
 						gc.fillRectangle(canvasRect);
 					} else {
-						gc.drawPoint(x, waveY);
+						//gc.drawPoint(x, waveY);
+						
+
+						// if (x > 0) {
+						// gc.setForeground(Display.getCurrent()
+						// .getSystemColor(SWT.COLOR_BLACK));
+						// gc.drawLine(x + 1, 0, x + 1, 127);
+						// gc.setForeground(Display.getCurrent()
+						// .getSystemColor(SWT.COLOR_GREEN));
+						// }
+						
+						gc.drawLine(x, waveY, x - 1, old_y);
 						x++;
 					}
 
