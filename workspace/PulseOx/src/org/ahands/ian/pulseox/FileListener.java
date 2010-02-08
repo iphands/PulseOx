@@ -101,6 +101,10 @@ public class FileListener implements Runnable {
 
 					if (x >= 200) {
 						x = 0;
+						gc.setForeground(new Color(display, 0, 0, 0));
+						gc.drawLine(0, 0, 0, 127);
+						gc.drawLine(1, 0, 1, 127);
+						gc.setForeground(new Color(display, 0, 255, 0));
 						// gc.fillRectangle(canvasRect);
 					} else {
 						// gc.drawPoint(x, waveY);
@@ -155,8 +159,6 @@ public class FileListener implements Runnable {
 				} else {
 					System.out.println("debug: waiting for control character ("
 							+ controlInt + ")");
-
-					deviceReader.close();
 				}
 
 			} catch (IOException e) {
