@@ -75,11 +75,6 @@ public class FileListener implements Runnable {
 
 				Thread.sleep(250);
 			} catch (Exception e) {
-				try {
-					deviceReader.close();
-				} catch (IOException e1) {
-
-				}
 			}
 		}
 
@@ -118,7 +113,7 @@ public class FileListener implements Runnable {
 						try {
 							gc.drawLine(x, waveY, x - 1, old_y);
 						} catch (Exception e) {
-							// TODO: handle exception
+							e.printStackTrace();
 						}
 						// gc.drawPoint(x, waveY);
 						x++;
@@ -164,7 +159,7 @@ public class FileListener implements Runnable {
 				} else {
 					System.out.println("debug: waiting for control character ("
 							+ controlInt + ")");
-					deviceReader.close();
+					Thread.sleep(250);
 				}
 
 			} catch (IOException e) {
