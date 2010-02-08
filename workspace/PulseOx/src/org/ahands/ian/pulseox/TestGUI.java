@@ -107,7 +107,7 @@ public class TestGUI {
 				gc
 						.setForeground(pEvent.display
 								.getSystemColor(SWT.COLOR_GREEN));
-				fileListener.setGC(gc, canvas);
+				fileListener.setGC(gc, canvas, canvas.getClientArea());
 			}
 		});
 	}

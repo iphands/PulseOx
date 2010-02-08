@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -30,6 +30,8 @@ public class FileListener implements Runnable {
 	int oxygenSat;
 	Canvas canvas;
 	GC gc;
+	Rectangle canvasRect;
+
 	int[] coord = new int[] { 0, 0 };
 
 	boolean keepRunning = true;
@@ -45,9 +47,10 @@ public class FileListener implements Runnable {
 		this.heartRateGroup = heartRateGroup;
 	}
 
-	public void setGC(GC gc, Canvas canvas) {
+	public void setGC(GC gc, Canvas canvas, Rectangle canvasRect) {
 		this.gc = gc;
 		this.canvas = canvas;
+		this.canvasRect = canvasRect;
 		return;
 	}
 
@@ -91,17 +94,12 @@ public class FileListener implements Runnable {
 					oxygenSat = deviceReader.read();
 
 					if (x >= 200) {
-						x = 1;
+						x = 0;
+						gc.fillRectangle(canvasRect);
 					} else {
 						gc.drawPoint(x, waveY);
 						x++;
 					}
-
-					// System.out.println("contr: " + controlInt);
-					// System.out.println("wavex: " + waveY);
-					// System.out.println("wavey: " + waveX);
-					// System.out.println("pulse: " + heartRate);
-					// System.out.println("oxy  : " + oxygenSat + "\n");
 
 					if (heartRate < 40) {
 						heartRate += 127;
@@ -138,13 +136,13 @@ public class FileListener implements Runnable {
 						}
 					});
 
-					Thread.sleep(20);
+					Thread.sleep(5);
 
 				} else {
 					System.out.println("debug: waiting for control character ("
 							+ controlInt + ")");
 
-					deviceReader.close();
+					Thread.sleep(5);
 				}
 
 			} catch (IOException e) {
