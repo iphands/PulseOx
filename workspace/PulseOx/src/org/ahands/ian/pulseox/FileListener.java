@@ -159,6 +159,7 @@ public class FileListener implements Runnable {
 				} else {
 					System.out.println("debug: waiting for control character ("
 							+ controlInt + ")");
+					deviceReader.close();
 				}
 
 			} catch (IOException e) {
