@@ -49,11 +49,15 @@ public class FileListener implements Runnable {
 		final String DEVICE = "/dev/ttyUSB0";
 
 		BufferedReader deviceReader = null;
-		try {
-			deviceReader = new BufferedReader(new FileReader(new File(DEVICE)));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		while (deviceReader == null && !shell.isDisposed()) {
+			try {
+				deviceReader = new BufferedReader(new FileReader(new File(
+						DEVICE)));
+
+				Thread.sleep(250);
+			} catch (Exception e) {
+
+			}
 		}
 
 		while (!shell.isDisposed()) {
@@ -109,8 +113,11 @@ public class FileListener implements Runnable {
 
 				} else {
 					System.out.println("debug: waiting for control character ("
-							+ controlInt + ")\n\n");
+							+ controlInt + ")");
+
+					deviceReader.close();
 				}
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
