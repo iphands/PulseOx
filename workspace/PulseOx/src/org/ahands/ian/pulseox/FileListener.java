@@ -101,19 +101,16 @@ public class FileListener implements Runnable {
 
 					if (x >= 200) {
 						x = 0;
-						gc.fillRectangle(canvasRect);
+						// gc.fillRectangle(canvasRect);
 					} else {
-						//gc.drawPoint(x, waveY);
-						
+						// gc.drawPoint(x, waveY);
 
-						// if (x > 0) {
-						// gc.setForeground(Display.getCurrent()
-						// .getSystemColor(SWT.COLOR_BLACK));
-						// gc.drawLine(x + 1, 0, x + 1, 127);
-						// gc.setForeground(Display.getCurrent()
-						// .getSystemColor(SWT.COLOR_GREEN));
-						// }
-						
+						if (x > 0) {
+							gc.setForeground(new Color(display, 0, 0, 0));
+							gc.drawLine(x + 1, 0, x + 1, 127);
+							gc.setForeground(new Color(display, 0, 255, 0));
+						}
+
 						gc.drawLine(x, waveY, x - 1, old_y);
 						x++;
 					}
