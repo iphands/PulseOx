@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -16,7 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class FileListener implements Runnable {
 
-	Display display = null;
+	Display display = Display.getCurrent();
 	Shell shell = null;
 	Label heartBPMLabel = null;
 	Label oxySatLabel = null;
@@ -37,6 +38,10 @@ public class FileListener implements Runnable {
 	int x;
 	int y;
 	int old_y;
+
+	final Color BLACK = display.getSystemColor(SWT.COLOR_BLACK);
+	final Color GREEN = display.getSystemColor(SWT.COLOR_GREEN);
+	final Color RED = display.getSystemColor(SWT.COLOR_RED);
 
 	// boolean keepRunning = true;
 
@@ -132,37 +137,31 @@ public class FileListener implements Runnable {
 
 							if (x >= X_MAX) {
 								x = 0;
-								gc.setForeground(new Color(display, 0, 0, 0));
+								gc.setForeground(BLACK);
 								gc.drawLine(0, 0, 0, Y_MAX);
 								gc.drawLine(1, 0, 1, Y_MAX);
-								gc.setForeground(new Color(display, 0, 255, 0));
+								gc.setForeground(GREEN);
 								// gc.fillRectangle(canvasRect);
 							} else {
-								// gc.drawPoint(x, waveY);
 
 								if (x > 0) {
-									gc
-											.setForeground(new Color(display,
-													0, 0, 0));
+									gc.setForeground(BLACK);
 									gc.drawLine(x + 1, 0, x + 1, Y_MAX);
-									gc.setForeground(new Color(display, 0, 255,
-											0));
+									gc.setForeground(GREEN);
 								}
 
-								try {
-									gc.drawLine(x, y, x - 1, old_y);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
+								gc.setForeground(GREEN);
+								gc.drawLine(x, y, x - 1, old_y);
 
-								// gc.drawPoint(x, waveY);
+								gc.setForeground(RED);
+								gc.drawPoint(x, y);
+
 								x++;
 							}
 
 							heartBPMLabel.setText(heartRate + "");
 							if (heartRate < 40) {
-								heartBPMLabel.setBackground(new Color(display,
-										255, 0, 0));
+								heartBPMLabel.setBackground(RED);
 							} else {
 								heartBPMLabel.setBackground(shell
 										.getBackground());
