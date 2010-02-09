@@ -30,7 +30,8 @@ public class FileListener implements Runnable {
 	int heartRate;
 	int oxygenSat;
 	Canvas canvas;
-	GC gc;
+	GC waveFormGc;
+	GC trayGc;
 	Rectangle canvasRect;
 
 	int[] coord = new int[] { 0, 0 };
@@ -57,7 +58,7 @@ public class FileListener implements Runnable {
 	}
 
 	public void setGC(GC gc, Canvas canvas, Rectangle canvasRect) {
-		this.gc = gc;
+		this.waveFormGc = gc;
 		this.canvas = canvas;
 		this.canvasRect = canvasRect;
 		return;
@@ -137,24 +138,24 @@ public class FileListener implements Runnable {
 
 							if (x >= X_MAX) {
 								x = 0;
-								gc.setForeground(BLACK);
-								gc.drawLine(0, 0, 0, Y_MAX);
-								gc.drawLine(1, 0, 1, Y_MAX);
-								gc.setForeground(GREEN);
+								waveFormGc.setForeground(BLACK);
+								waveFormGc.drawLine(0, 0, 0, Y_MAX);
+								waveFormGc.drawLine(1, 0, 1, Y_MAX);
+								waveFormGc.setForeground(GREEN);
 								// gc.fillRectangle(canvasRect);
 							} else {
 
 								if (x > 0) {
-									gc.setForeground(BLACK);
-									gc.drawLine(x + 1, 0, x + 1, Y_MAX);
-									gc.setForeground(GREEN);
+									waveFormGc.setForeground(BLACK);
+									waveFormGc.drawLine(x + 1, 0, x + 1, Y_MAX);
+									waveFormGc.setForeground(GREEN);
 								}
 
-								gc.setForeground(GREEN);
-								gc.drawLine(x, y, x - 1, old_y);
+								waveFormGc.setForeground(GREEN);
+								waveFormGc.drawLine(x, y, x - 1, old_y);
 
-								gc.setForeground(RED);
-								gc.drawPoint(x, y);
+								waveFormGc.setForeground(RED);
+								waveFormGc.drawPoint(x, y);
 
 								x++;
 							}

@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -17,6 +18,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tray;
+import org.eclipse.swt.widgets.TrayItem;
 
 public class TestGUI {
 
@@ -26,7 +29,9 @@ public class TestGUI {
 	Group oxygenSatGroup;
 
 	Canvas canvas;
-	GC gc;
+	GC waveFormGc;
+	GC trayGc;
+	Image trayImage;
 	FileListener fileListener;
 
 	public TestGUI(Display display) {
@@ -37,6 +42,7 @@ public class TestGUI {
 
 		center(shell);
 		initUI(shell);
+		initTray(display);
 
 		shell.pack();
 		shell.open();
@@ -51,10 +57,30 @@ public class TestGUI {
 				fileListener));
 		titleUpdater.start();
 
+		// Thread trayUpdater = new Thread(new TrayUpdater(display, shell,
+		// fileListener, trayImage, trayGc));
+		//trayUpdater.start();
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
+		}
+	}
+
+	public void initTray(Display display) {
+		Tray tray = display.getSystemTray();
+		trayImage = new Image(display, 16, 16);
+		trayGc = new GC(trayImage);
+		trayGc.drawText("--", 3, 0);
+		// trayGc.dispose();
+
+		if (tray != null) {
+			final TrayItem trayItem = new TrayItem(tray, SWT.NONE);
+			trayItem.setToolTipText("--");
+			trayItem.setText("a");
+
+			trayItem.setImage(trayImage);
 		}
 	}
 
@@ -109,12 +135,11 @@ public class TestGUI {
 		canvas.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent pEvent) {
-				gc = new GC(canvas);
-				gc
-						.setForeground(pEvent.display
-								.getSystemColor(SWT.COLOR_GREEN));
+				waveFormGc = new GC(canvas);
+				waveFormGc.setForeground(pEvent.display
+						.getSystemColor(SWT.COLOR_GREEN));
 
-				fileListener.setGC(gc, canvas, canvas.getClientArea());
+				fileListener.setGC(waveFormGc, canvas, canvas.getClientArea());
 			}
 		});
 	}
