@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -24,7 +25,7 @@ public class FileListener implements Runnable {
 	Group oxygenSatGroup = null;
 
 	int controlInt = 134;
-	int waveY;
+	int waveY = 0;
 	int waveX;
 	int heartRate;
 	int oxygenSat;
@@ -34,7 +35,7 @@ public class FileListener implements Runnable {
 
 	int[] coord = new int[] { 0, 0 };
 
-	boolean keepRunning = true;
+	// boolean keepRunning = true;
 
 	public FileListener(Display display, Shell shell, Label heartBPMLabel,
 			Label oxySatLabel, Group oxygenSatGroup, Group heartRateGroup) {
@@ -54,10 +55,10 @@ public class FileListener implements Runnable {
 		return;
 	}
 
-	public void endThread() {
-		keepRunning = false;
-		return;
-	}
+	// public void endThread() {
+	// keepRunning = false;
+	// return;
+	// }
 
 	public int[] getPoint() {
 		return coord;
@@ -72,35 +73,63 @@ public class FileListener implements Runnable {
 				deviceReader = new BufferedReader(new FileReader(new File(
 						DEVICE)));
 
-				Thread.sleep(250);
-			} catch (Exception e) {
-				try {
-					deviceReader.close();
-				} catch (IOException e1) {
+			} catch (IOException e) {
 
-				}
+				System.out.println("Unable to open " + DEVICE
+						+ " trying again...");
+			}
+
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
 		int x = 0;
+		int y = 0;
+		int old_y = 0;
+		final int Y_MAX = 127;
+		final int X_MAX = 200;
 
 		System.out.println("BPM, o2");
 		while (!shell.isDisposed()) {
 
 			try {
-				if ((controlInt = deviceReader.read()) > 127) {
+				if ((controlInt = deviceReader.read()) > Y_MAX) {
+					old_y = y;
 					waveY = deviceReader.read();
+					y = Y_MAX - waveY;
 					waveX = deviceReader.read();
 					heartRate = deviceReader.read();
 					oxygenSat = deviceReader.read();
 
 					System.out.println(heartRate + "," + oxygenSat);
 
-					if (x >= 200) {
+					if (x >= X_MAX) {
 						x = 0;
-						gc.fillRectangle(canvasRect);
+						gc.setForeground(new Color(display, 0, 0, 0));
+						gc.drawLine(0, 0, 0, Y_MAX);
+						gc.drawLine(1, 0, 1, Y_MAX);
+						gc.setForeground(new Color(display, 0, 255, 0));
+						// gc.fillRectangle(canvasRect);
 					} else {
-						gc.drawPoint(x, waveY);
+						// gc.drawPoint(x, waveY);
+
+						if (x > 0) {
+							gc.setForeground(new Color(display, 0, 0, 0));
+							gc.drawLine(x + 1, 0, x + 1, Y_MAX);
+							gc.setForeground(new Color(display, 0, 255, 0));
+						}
+
+						try {
+							gc.drawLine(x, y, x - 1, old_y);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						// gc.drawPoint(x, waveY);
 						x++;
 					}
 
@@ -144,13 +173,18 @@ public class FileListener implements Runnable {
 				} else {
 					System.out.println("debug: waiting for control character ("
 							+ controlInt + ")");
-
-					deviceReader.close();
+					Thread.sleep(250);
 				}
 
 			} catch (IOException e) {
-
 			} catch (InterruptedException e) {
+			}
+		}
+
+		if (deviceReader != null) {
+			try {
+				deviceReader.close();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

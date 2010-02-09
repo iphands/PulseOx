@@ -33,17 +33,20 @@ public class TestGUI {
 
 		Shell shell = new Shell(display, SWT.SHELL_TRIM);
 		shell.setText("PulseOx");
-		shell.setSize(420, 400);
+		// shell.setSize(420, 400);
 
 		center(shell);
 		initUI(shell);
 
+		shell.pack();
 		shell.open();
 
 		fileListener = new FileListener(display, shell, heartBPMLabel,
 				oxySatLabel, oxygenSatGroup, heartRateGroup);
+
 		Thread guiUpdate = new Thread(fileListener);
 
+		// display.asyncExec(guiUpdate);
 		guiUpdate.start();
 
 		while (!shell.isDisposed()) {
@@ -63,7 +66,7 @@ public class TestGUI {
 		vertRowLayout.spacing = 10;
 		shell.setLayout(vertRowLayout);
 
-		Composite topComp = new Composite(shell, SWT.BORDER | SWT.FILL);
+		Composite topComp = new Composite(shell, SWT.NONE | SWT.FILL);
 		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
 		Font initialFont = shell.getFont();
@@ -90,11 +93,13 @@ public class TestGUI {
 		oxySatLabel.setText("--");
 		oxySatLabel.setBounds(20, 20, 80, 40);
 
-		Composite bottomComp = new Composite(shell, SWT.BORDER);
-		bottomComp.setLayout(new RowLayout(SWT.FILL));
+		Composite bottomComp = new Composite(shell, SWT.NONE);
+		bottomComp.setLayout(new RowLayout(SWT.FILL | SWT.CENTER));
 
-		Group waveFormGroup = new Group(bottomComp, SWT.SHADOW_ETCHED_IN);
+		Group waveFormGroup = new Group(bottomComp, SWT.SHADOW_ETCHED_IN
+				| SWT.CENTER);
 		waveFormGroup.setText("Wave Form");
+		// waveFormGroup.
 
 		canvas = new Canvas(waveFormGroup, SWT.NONE);
 		canvas.setSize(200, 128);
@@ -107,6 +112,7 @@ public class TestGUI {
 				gc
 						.setForeground(pEvent.display
 								.getSystemColor(SWT.COLOR_GREEN));
+
 				fileListener.setGC(gc, canvas, canvas.getClientArea());
 			}
 		});
