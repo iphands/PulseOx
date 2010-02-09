@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Shell;
 
 public class TestGUI {
@@ -77,14 +78,6 @@ public class TestGUI {
 
 		Font bigFont = new Font(Display.getCurrent(), fontData);
 
-		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
-		heartRateGroup.setText("Heart Rate");
-
-		heartBPMLabel = new Label(heartRateGroup, SWT.CENTER);
-		heartBPMLabel.setFont(bigFont);
-		heartBPMLabel.setText("--");
-		heartBPMLabel.setBounds(20, 20, 80, 40);
-
 		oxygenSatGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN);
 		oxygenSatGroup.setText("Oxygen Saturation");
 
@@ -92,6 +85,14 @@ public class TestGUI {
 		oxySatLabel.setFont(bigFont);
 		oxySatLabel.setText("--");
 		oxySatLabel.setBounds(20, 20, 80, 40);
+
+		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
+		heartRateGroup.setText("Heart Rate");
+
+		heartBPMLabel = new Label(heartRateGroup, SWT.CENTER);
+		heartBPMLabel.setFont(bigFont);
+		heartBPMLabel.setText("--");
+		heartBPMLabel.setBounds(20, 20, 80, 40);
 
 		Composite bottomComp = new Composite(shell, SWT.NONE);
 		bottomComp.setLayout(new RowLayout(SWT.FILL | SWT.CENTER));
