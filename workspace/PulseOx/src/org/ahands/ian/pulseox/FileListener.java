@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -55,11 +54,6 @@ public class FileListener implements Runnable {
 		return;
 	}
 
-	// public void endThread() {
-	// keepRunning = false;
-	// return;
-	// }
-
 	public int[] getPoint() {
 		return coord;
 	}
@@ -86,8 +80,6 @@ public class FileListener implements Runnable {
 			try {
 				Thread.sleep(250);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 
@@ -124,7 +116,7 @@ public class FileListener implements Runnable {
 						continue;
 					}
 
-					// System.out.println(heartRate + "," + oxygenSat);
+					System.out.println(heartRate + "," + oxygenSat);
 
 					if (x >= X_MAX) {
 						x = 0;
