@@ -34,6 +34,10 @@ public class FileListener implements Runnable {
 
 	int[] coord = new int[] { 0, 0 };
 
+	int x;
+	int y;
+	int old_y;
+
 	// boolean keepRunning = true;
 
 	public FileListener(Display display, Shell shell, Label heartBPMLabel,
@@ -83,9 +87,9 @@ public class FileListener implements Runnable {
 			}
 		}
 
-		int x = 0;
-		int y = 0;
-		int old_y = 0;
+		x = 0;
+		y = 0;
+		old_y = 0;
 		final int Y_MAX = 127;
 		final int X_MAX = 200;
 		int counter = 0;
@@ -118,32 +122,6 @@ public class FileListener implements Runnable {
 
 					System.out.println(heartRate + "," + oxygenSat);
 
-					if (x >= X_MAX) {
-						x = 0;
-						gc.setForeground(new Color(display, 0, 0, 0));
-						gc.drawLine(0, 0, 0, Y_MAX);
-						gc.drawLine(1, 0, 1, Y_MAX);
-						gc.setForeground(new Color(display, 0, 255, 0));
-						// gc.fillRectangle(canvasRect);
-					} else {
-						// gc.drawPoint(x, waveY);
-
-						if (x > 0) {
-							gc.setForeground(new Color(display, 0, 0, 0));
-							gc.drawLine(x + 1, 0, x + 1, Y_MAX);
-							gc.setForeground(new Color(display, 0, 255, 0));
-						}
-
-						try {
-							gc.drawLine(x, y, x - 1, old_y);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-						// gc.drawPoint(x, waveY);
-						x++;
-					}
-
 					if (heartRate < 40) {
 						heartRate += 127;
 					}
@@ -151,6 +129,36 @@ public class FileListener implements Runnable {
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
+
+							if (x >= X_MAX) {
+								x = 0;
+								gc.setForeground(new Color(display, 0, 0, 0));
+								gc.drawLine(0, 0, 0, Y_MAX);
+								gc.drawLine(1, 0, 1, Y_MAX);
+								gc.setForeground(new Color(display, 0, 255, 0));
+								// gc.fillRectangle(canvasRect);
+							} else {
+								// gc.drawPoint(x, waveY);
+
+								if (x > 0) {
+									gc
+											.setForeground(new Color(display,
+													0, 0, 0));
+									gc.drawLine(x + 1, 0, x + 1, Y_MAX);
+									gc.setForeground(new Color(display, 0, 255,
+											0));
+								}
+
+								try {
+									gc.drawLine(x, y, x - 1, old_y);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+
+								// gc.drawPoint(x, waveY);
+								x++;
+							}
+
 							heartBPMLabel.setText(heartRate + "");
 							if (heartRate < 40) {
 								heartBPMLabel.setBackground(new Color(display,
