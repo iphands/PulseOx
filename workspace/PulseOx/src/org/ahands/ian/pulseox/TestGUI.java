@@ -101,7 +101,6 @@ public class TestGUI {
 		Group waveFormGroup = new Group(bottomComp, SWT.SHADOW_ETCHED_IN
 				| SWT.CENTER);
 		waveFormGroup.setText("Wave Form");
-		// waveFormGroup.
 
 		canvas = new Canvas(waveFormGroup, SWT.NONE);
 		canvas.setSize(200, 128);
