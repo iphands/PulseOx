@@ -21,11 +21,7 @@ public class TitleUpdater implements Runnable {
 			display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
-
-					System.out.println("debug");
 					shell.setText("PulseOx -- " + fileListener.getOxygenSat());
-
 				}
 			});
 			try {
