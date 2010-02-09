@@ -126,7 +126,7 @@ public class FileListener implements Runnable {
 						continue;
 					}
 
-					System.out.println(heartRate + "," + oxygenSat);
+					// System.out.println(heartRate + "," + oxygenSat);
 
 					if (heartRate < 40) {
 						heartRate += 127;

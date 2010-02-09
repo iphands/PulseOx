@@ -32,6 +32,7 @@ public class TestGUI {
 	GC waveFormGc;
 	GC trayGc;
 	Image trayImage;
+	TrayItem trayItem;
 	FileListener fileListener;
 
 	public TestGUI(Display display) {
@@ -57,9 +58,9 @@ public class TestGUI {
 				fileListener));
 		titleUpdater.start();
 
-		// Thread trayUpdater = new Thread(new TrayUpdater(display, shell,
-		// fileListener, trayImage, trayGc));
-		//trayUpdater.start();
+		Thread trayUpdater = new Thread(new TrayUpdater(display, shell,
+				fileListener, trayImage, trayItem, trayGc));
+		trayUpdater.start();
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -70,16 +71,14 @@ public class TestGUI {
 
 	public void initTray(Display display) {
 		Tray tray = display.getSystemTray();
-		trayImage = new Image(display, 16, 16);
+		trayImage = new Image(display, 24, 24);
 		trayGc = new GC(trayImage);
-		trayGc.drawText("--", 3, 0);
-		// trayGc.dispose();
+		trayGc.drawText("99", 3, 3);
+		trayGc.drawText("91", 3, 3);
 
 		if (tray != null) {
-			final TrayItem trayItem = new TrayItem(tray, SWT.NONE);
-			trayItem.setToolTipText("--");
-			trayItem.setText("a");
-
+			trayItem = new TrayItem(tray, SWT.NONE);
+			trayItem.setToolTipText("99");
 			trayItem.setImage(trayImage);
 		}
 	}
