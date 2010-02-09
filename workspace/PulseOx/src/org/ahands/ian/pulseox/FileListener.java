@@ -92,11 +92,21 @@ public class FileListener implements Runnable {
 		int old_y = 0;
 		final int Y_MAX = 127;
 		final int X_MAX = 200;
+		int counter = 0;
 
 		System.out.println("BPM, o2");
 		while (!shell.isDisposed()) {
-
 			try {
+				if (counter >= 50) {
+					deviceReader.close();
+					deviceReader = new BufferedReader(new FileReader(new File(
+							DEVICE)));
+					counter = 0;
+					System.out.println("debug: flush test");
+				} else {
+					counter++;
+				}
+
 				if ((controlInt = deviceReader.read()) > Y_MAX) {
 					old_y = y;
 					waveY = deviceReader.read();
