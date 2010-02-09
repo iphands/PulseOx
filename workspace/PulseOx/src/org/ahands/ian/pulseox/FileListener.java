@@ -97,7 +97,7 @@ public class FileListener implements Runnable {
 		System.out.println("BPM, o2");
 		while (!shell.isDisposed()) {
 			try {
-				if (counter >= 50) {
+				if (counter >= 400) {
 					deviceReader.close();
 					deviceReader = new BufferedReader(new FileReader(new File(
 							DEVICE)));
