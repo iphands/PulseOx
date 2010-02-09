@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Shell;
 
 public class TestGUI {
@@ -46,9 +45,11 @@ public class TestGUI {
 				oxySatLabel, oxygenSatGroup, heartRateGroup);
 
 		Thread guiUpdate = new Thread(fileListener);
-
-		// display.asyncExec(guiUpdate);
 		guiUpdate.start();
+
+		Thread titleUpdater = new Thread(new TitleUpdater(display, shell,
+				fileListener));
+		titleUpdater.start();
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {

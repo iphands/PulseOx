@@ -64,6 +64,10 @@ public class FileListener implements Runnable {
 		return coord;
 	}
 
+	public synchronized int getOxygenSat() {
+		return oxygenSat;
+	}
+
 	public void run() {
 		final String DEVICE = "/dev/ttyUSB0";
 
@@ -120,7 +124,7 @@ public class FileListener implements Runnable {
 						continue;
 					}
 
-					System.out.println(heartRate + "," + oxygenSat);
+					// System.out.println(heartRate + "," + oxygenSat);
 
 					if (x >= X_MAX) {
 						x = 0;
