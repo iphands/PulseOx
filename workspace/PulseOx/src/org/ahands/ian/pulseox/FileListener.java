@@ -107,13 +107,18 @@ public class FileListener implements Runnable {
 					counter++;
 				}
 
-				if ((controlInt = deviceReader.read()) > Y_MAX) {
+				if ((controlInt = deviceReader.read()) > 128) {
+
 					old_y = y;
 					waveY = deviceReader.read();
 					y = Y_MAX - waveY;
 					waveX = deviceReader.read();
 					heartRate = deviceReader.read();
 					oxygenSat = deviceReader.read();
+
+					if (heartRate > 127 || oxygenSat > 127) {
+						continue;
+					}
 
 					System.out.println(heartRate + "," + oxygenSat);
 
