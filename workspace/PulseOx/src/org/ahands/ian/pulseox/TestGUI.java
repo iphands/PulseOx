@@ -43,8 +43,10 @@ public class TestGUI {
 
 		fileListener = new FileListener(display, shell, heartBPMLabel,
 				oxySatLabel, oxygenSatGroup, heartRateGroup);
+
 		Thread guiUpdate = new Thread(fileListener);
 
+		// display.asyncExec(guiUpdate);
 		guiUpdate.start();
 
 		while (!shell.isDisposed()) {
@@ -97,6 +99,7 @@ public class TestGUI {
 		Group waveFormGroup = new Group(bottomComp, SWT.SHADOW_ETCHED_IN
 				| SWT.CENTER);
 		waveFormGroup.setText("Wave Form");
+		// waveFormGroup.
 
 		canvas = new Canvas(waveFormGroup, SWT.NONE);
 		canvas.setSize(200, 128);
@@ -109,6 +112,7 @@ public class TestGUI {
 				gc
 						.setForeground(pEvent.display
 								.getSystemColor(SWT.COLOR_GREEN));
+
 				fileListener.setGC(gc, canvas, canvas.getClientArea());
 			}
 		});
