@@ -132,6 +132,8 @@ public class FileListener implements Runnable {
 
 					if (heartRate > 127 || oxygenSat > 127) {
 						continue;
+					} else if (heartRate <= 0 || oxygenSat <= 0) {
+						continue;
 					}
 
 					if ((oldHeartRate != heartRate)
@@ -139,6 +141,7 @@ public class FileListener implements Runnable {
 
 						System.out.println(dateFormat.format(new Date()) + ","
 								+ heartRate + "," + oxygenSat);
+
 					}
 
 					oldHeartRate = heartRate;
