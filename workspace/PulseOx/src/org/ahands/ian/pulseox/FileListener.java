@@ -86,7 +86,7 @@ public class FileListener implements Runnable {
 
 			} catch (IOException e) {
 
-				System.out.println("Unable to open " + DEVICE
+				System.err.println("Unable to open " + DEVICE
 						+ " trying again...");
 			}
 
@@ -116,7 +116,7 @@ public class FileListener implements Runnable {
 					deviceReader = new BufferedReader(new FileReader(new File(
 							DEVICE)));
 					counter = 0;
-					// System.out.println("debug: flush test");
+					System.err.println("debug: flush test");
 				} else {
 					counter++;
 				}
@@ -206,7 +206,7 @@ public class FileListener implements Runnable {
 					Thread.sleep(20);
 
 				} else {
-					System.out.println("debug: waiting for control character ("
+					System.err.println("debug: waiting for control character ("
 							+ controlInt + ")");
 					Thread.sleep(250);
 				}
