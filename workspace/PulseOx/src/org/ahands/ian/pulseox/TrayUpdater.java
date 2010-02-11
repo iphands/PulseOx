@@ -42,6 +42,8 @@ public class TrayUpdater implements Runnable {
 					if (oxygenSat < 0) {
 						oxygenSat = 0;
 
+					} else {
+
 						final String oxygenSatStr = "" + oxygenSat;
 
 						if (oxygenSat > 93) {
@@ -52,6 +54,7 @@ public class TrayUpdater implements Runnable {
 							trayGc.setBackground(RED);
 						}
 
+						trayGc.fillRectangle(image.getBounds());
 						trayGc.drawText(oxygenSatStr, 3, 3);
 						trayItem.setImage(image);
 					}
