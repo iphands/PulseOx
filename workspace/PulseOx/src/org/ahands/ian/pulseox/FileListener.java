@@ -27,6 +27,7 @@ public class FileListener implements Runnable {
 	Group heartRateGroup = null;
 	Group oxygenSatGroup = null;
 
+	String DEVICE = "/dev/ttyUSB0";
 	int controlInt = 134;
 	int waveY = 0;
 	int waveX;
@@ -36,6 +37,8 @@ public class FileListener implements Runnable {
 	GC waveFormGc;
 
 	Rectangle canvasRect;
+
+	int counter = 0;
 
 	int[] coord = new int[] { 0, 0 };
 
@@ -49,15 +52,23 @@ public class FileListener implements Runnable {
 
 	// boolean keepRunning = true;
 
-	public FileListener(Display display, Shell shell, Label heartBPMLabel,
-			Label oxySatLabel, Group oxygenSatGroup, Group heartRateGroup) {
+	public FileListener(String device, Display display, Shell shell,
+			Label heartBPMLabel, Label oxySatLabel, Group oxygenSatGroup,
+			Group heartRateGroup) {
 
+		this.DEVICE = device;
 		this.display = display;
 		this.shell = shell;
 		this.heartBPMLabel = heartBPMLabel;
 		this.oxySatLabel = oxySatLabel;
 		this.oxygenSatGroup = oxygenSatGroup;
 		this.heartRateGroup = heartRateGroup;
+	}
+
+	public void setDevice(String device) {
+		this.DEVICE = device;
+		this.counter = 500;
+		return;
 	}
 
 	public void setGC(GC gc, Canvas canvas, Rectangle canvasRect) {
@@ -76,7 +87,6 @@ public class FileListener implements Runnable {
 	}
 
 	public void run() {
-		final String DEVICE = "/dev/ttyUSB0";
 
 		BufferedReader deviceReader = null;
 		while (deviceReader == null && !shell.isDisposed()) {
@@ -101,7 +111,6 @@ public class FileListener implements Runnable {
 		old_y = 0;
 		final int Y_MAX = 127;
 		final int X_MAX = 200;
-		int counter = 0;
 		int oldHeartRate = 0;
 		int oldOxygenSat = 0;
 
@@ -211,7 +220,7 @@ public class FileListener implements Runnable {
 				} else {
 					System.err.println("debug: waiting for control character ("
 							+ controlInt + ")");
-					Thread.sleep(250);
+					Thread.sleep(1000);
 				}
 
 			} catch (IOException e) {
