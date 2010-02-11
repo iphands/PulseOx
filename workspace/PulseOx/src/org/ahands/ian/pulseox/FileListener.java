@@ -102,6 +102,8 @@ public class FileListener implements Runnable {
 		final int Y_MAX = 127;
 		final int X_MAX = 200;
 		int counter = 0;
+		int oldHeartRate = 0;
+		int oldOxygenSat = 0;
 
 		final DateFormat dateFormat = new SimpleDateFormat(
 				"yyyy/MM/dd HH:mm:ss:S");
@@ -132,8 +134,12 @@ public class FileListener implements Runnable {
 						continue;
 					}
 
-					System.out.println(dateFormat.format(new Date()) + ","
-							+ heartRate + "," + oxygenSat);
+					if ((oldHeartRate != heartRate)
+							|| (oldOxygenSat != oxygenSat)) {
+
+						System.out.println(dateFormat.format(new Date()) + ","
+								+ heartRate + "," + oxygenSat);
+					}
 
 					if (heartRate < 40) {
 						heartRate += 127;
