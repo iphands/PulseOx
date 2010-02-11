@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -100,6 +103,9 @@ public class FileListener implements Runnable {
 		final int X_MAX = 200;
 		int counter = 0;
 
+		final DateFormat dateFormat = new SimpleDateFormat(
+				"yyyy/MM/dd HH:mm:ss:S");
+
 		System.out.println("BPM, o2");
 		while (!shell.isDisposed()) {
 			try {
@@ -108,7 +114,7 @@ public class FileListener implements Runnable {
 					deviceReader = new BufferedReader(new FileReader(new File(
 							DEVICE)));
 					counter = 0;
-					System.out.println("debug: flush test");
+					// System.out.println("debug: flush test");
 				} else {
 					counter++;
 				}
@@ -126,7 +132,8 @@ public class FileListener implements Runnable {
 						continue;
 					}
 
-					System.out.println(heartRate + "," + oxygenSat);
+					System.out.println(dateFormat.format(new Date()) + ","
+							+ heartRate + "," + oxygenSat);
 
 					if (heartRate < 40) {
 						heartRate += 127;
