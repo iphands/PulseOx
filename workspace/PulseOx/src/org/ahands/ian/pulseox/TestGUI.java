@@ -73,12 +73,11 @@ public class TestGUI {
 		Tray tray = display.getSystemTray();
 		trayImage = new Image(display, 24, 24);
 		trayGc = new GC(trayImage);
-		trayGc.drawText("99", 3, 3);
-		trayGc.drawText("91", 3, 3);
+		trayGc.drawText("err", 3, 3);
 
 		if (tray != null) {
 			trayItem = new TrayItem(tray, SWT.NONE);
-			trayItem.setToolTipText("99");
+			// trayItem.setToolTipText("99");
 			trayItem.setImage(trayImage);
 		}
 	}
