@@ -38,18 +38,23 @@ public class TrayUpdater implements Runnable {
 				public void run() {
 
 					int oxygenSat = fileListener.getOxygenSat();
-					final String oxygenSatStr = "" + oxygenSat;
 
-					if (oxygenSat > 93) {
-						trayGc.setBackground(GREEN);
-					} else if (oxygenSat > 90) {
-						trayGc.setBackground(ORANGE);
-					} else {
-						trayGc.setBackground(RED);
+					if (oxygenSat < 0) {
+						oxygenSat = 0;
+
+						final String oxygenSatStr = "" + oxygenSat;
+
+						if (oxygenSat > 93) {
+							trayGc.setBackground(GREEN);
+						} else if (oxygenSat > 90) {
+							trayGc.setBackground(ORANGE);
+						} else {
+							trayGc.setBackground(RED);
+						}
+
+						trayGc.drawText(oxygenSatStr, 3, 3);
+						trayItem.setImage(image);
 					}
-
-					trayGc.drawText(oxygenSatStr, 3, 3);
-					trayItem.setImage(image);
 				}
 			});
 			try {
