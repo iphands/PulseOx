@@ -31,7 +31,7 @@ public class FileListener implements Runnable {
 	int oxygenSat;
 	Canvas canvas;
 	GC waveFormGc;
-	GC trayGc;
+
 	Rectangle canvasRect;
 
 	int[] coord = new int[] { 0, 0 };

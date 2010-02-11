@@ -91,6 +91,9 @@ public class TestGUI {
 		vertRowLayout.marginLeft = 5;
 		vertRowLayout.marginRight = 5;
 		vertRowLayout.spacing = 10;
+		vertRowLayout.wrap = true;
+		vertRowLayout.fill = true;
+		vertRowLayout.justify = false;
 		shell.setLayout(vertRowLayout);
 
 		Composite topComp = new Composite(shell, SWT.NONE | SWT.FILL);
@@ -120,17 +123,17 @@ public class TestGUI {
 		heartBPMLabel.setText("--");
 		heartBPMLabel.setBounds(20, 20, 80, 40);
 
-		Composite bottomComp = new Composite(shell, SWT.NONE);
-		bottomComp.setLayout(new RowLayout(SWT.FILL | SWT.CENTER));
+		// Composite bottomComp = new Composite(shell, SWT.NONE);
+		// bottomComp.setLayout(new RowLayout(SWT.VERTICAL));
 
-		Group waveFormGroup = new Group(bottomComp, SWT.SHADOW_ETCHED_IN
-				| SWT.CENTER);
+		Group waveFormGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
 		waveFormGroup.setText("Wave Form");
 
 		canvas = new Canvas(waveFormGroup, SWT.NONE);
 		canvas.setSize(200, 128);
 		canvas.setLocation(5, 20);
 		canvas.setBackground(new Color(Display.getCurrent(), 0, 0, 0));
+
 		canvas.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent pEvent) {
