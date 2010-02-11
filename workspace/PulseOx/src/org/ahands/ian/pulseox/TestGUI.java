@@ -122,8 +122,8 @@ public class TestGUI {
 		heartBPMLabel.setText("--");
 		heartBPMLabel.setBounds(20, 20, 80, 40);
 
-		// Composite bottomComp = new Composite(shell, SWT.NONE);
-		// bottomComp.setLayout(new RowLayout(SWT.VERTICAL));
+		Composite bottomComp = new Composite(shell, SWT.NONE);
+		bottomComp.setLayout(new RowLayout(SWT.VERTICAL));
 
 		Group waveFormGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
 		waveFormGroup.setText("Wave Form");
