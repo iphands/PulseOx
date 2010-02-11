@@ -139,10 +139,10 @@ public class FileListener implements Runnable {
 
 						System.out.println(dateFormat.format(new Date()) + ","
 								+ heartRate + "," + oxygenSat);
-					} else {
-						oldHeartRate = heartRate;
-						oldOxygenSat = oxygenSat;
 					}
+
+					oldHeartRate = heartRate;
+					oldOxygenSat = oxygenSat;
 
 					if (heartRate < 40) {
 						heartRate += 127;
