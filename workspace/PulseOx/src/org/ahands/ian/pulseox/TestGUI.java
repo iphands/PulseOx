@@ -15,8 +15,12 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
@@ -39,7 +43,6 @@ public class TestGUI {
 
 		Shell shell = new Shell(display, SWT.SHELL_TRIM);
 		shell.setText("PulseOx");
-		// shell.setSize(420, 400);
 
 		center(shell);
 		initUI(shell);
@@ -48,8 +51,8 @@ public class TestGUI {
 		shell.pack();
 		shell.open();
 
-		fileListener = new FileListener(display, shell, heartBPMLabel,
-				oxySatLabel, oxygenSatGroup, heartRateGroup);
+		fileListener = new FileListener("/dev/ttyUSB0", display, shell,
+				heartBPMLabel, oxySatLabel, oxygenSatGroup, heartRateGroup);
 
 		Thread guiUpdate = new Thread(fileListener);
 		guiUpdate.start();
@@ -94,6 +97,28 @@ public class TestGUI {
 		vertRowLayout.fill = true;
 		vertRowLayout.justify = false;
 		shell.setLayout(vertRowLayout);
+
+		Menu menu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menu);
+
+		MenuItem deviceItem = new MenuItem(menu, SWT.CASCADE);
+		deviceItem.setText("&Device");
+
+		Menu subMenu = new Menu(shell, SWT.DROP_DOWN);
+		deviceItem.setMenu(subMenu);
+
+		String[] deviceArray = DeviceChooser.getDevList();
+		for (final String device : deviceArray) {
+			MenuItem item = new MenuItem(subMenu, SWT.PUSH);
+			item.setText(device);
+			item.addListener(SWT.Selection, new Listener() {
+
+				@Override
+				public void handleEvent(Event arg0) {
+					fileListener.setDevice(device);
+				}
+			});
+		}
 
 		Composite topComp = new Composite(shell, SWT.NONE | SWT.FILL);
 		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -159,8 +184,8 @@ public class TestGUI {
 
 	public static void main(String[] args) {
 		Display display = new Display();
+
 		new TestGUI(display);
 		display.dispose();
 	}
-
 }
