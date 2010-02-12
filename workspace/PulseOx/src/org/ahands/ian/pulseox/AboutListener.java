@@ -83,7 +83,7 @@ public class AboutListener implements Listener {
 		Label commentLabel = new Label(shell, SWT.CENTER);
 		commentLabel
 				.setText("A GUI application for the CMS-50e pulse oximeter.\n"
-						+ "Built for Yo Adrian!" + "");
+						+ "Written by Ian Page hands, for Yo Adrian!" + "");
 		titleLabel.setBounds(20, 20, 800, 100);
 
 		shell.pack();
