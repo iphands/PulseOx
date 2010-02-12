@@ -28,7 +28,7 @@ public class AboutListener implements Listener {
 	public void handleEvent(Event arg0) {
 
 		Display display = Display.getCurrent();
-		Shell shell = new Shell(display, SWT.SHELL_TRIM);
+		Shell shell = new Shell(display, SWT.TITLE | SWT.CLOSE);
 		shell.pack();
 		shell.open();
 
@@ -83,7 +83,7 @@ public class AboutListener implements Listener {
 		Label commentLabel = new Label(shell, SWT.CENTER);
 		commentLabel
 				.setText("A GUI application for the CMS-50e pulse oximeter.\n"
-						+ "Written by Ian Page hands, for Yo Adrian!" + "");
+						+ "Written by Ian Page Hands, for Yo Adrian!" + "");
 		titleLabel.setBounds(20, 20, 800, 100);
 
 		shell.pack();
