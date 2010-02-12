@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
@@ -81,9 +82,18 @@ public class AboutListener implements Listener {
 		titleLabel.setBounds(20, 20, 800, 100);
 
 		Label commentLabel = new Label(shell, SWT.CENTER);
+		// commentLabel.setSize(10, 10);
 		commentLabel
 				.setText("A GUI application for the CMS-50e pulse oximeter.\n"
 						+ "Written by Ian Page Hands, for Yo Adrian!" + "");
+
+		// Link commentLabel = new Link(shell, SWT.CENTER);
+		// commentLabel
+		// .setText("A GUI application for the CMS-50e pulse oximeter.\n"
+		// +
+		// "Written by Ian Page Hands, for <a href=\"http://cycling.ahands.org\">Yo Adrian</a>!"
+		// + "");
+
 		titleLabel.setBounds(20, 20, 800, 100);
 
 		shell.pack();
