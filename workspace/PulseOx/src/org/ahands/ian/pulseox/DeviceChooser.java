@@ -32,7 +32,6 @@ public class DeviceChooser {
 		}
 
 		Collections.reverse(fileStrList);
-
 		return (String[]) fileStrList.toArray(new String[0]);
 	}
 
