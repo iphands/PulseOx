@@ -104,8 +104,8 @@ public class TestGUI {
 		MenuItem deviceItem = new MenuItem(menu, SWT.CASCADE);
 		deviceItem.setText("&Device");
 
-		Menu subMenu = new Menu(shell, SWT.DROP_DOWN);
-		deviceItem.setMenu(subMenu);
+		Menu deviceSubMenu = new Menu(shell, SWT.DROP_DOWN);
+		deviceItem.setMenu(deviceSubMenu);
 
 		String[] deviceArray = DeviceChooser.getDevList();
 
@@ -119,9 +119,9 @@ public class TestGUI {
 		// });
 
 		for (final String device : deviceArray) {
-			MenuItem item = new MenuItem(subMenu, SWT.PUSH);
-			item.setText(device);
-			item.addListener(SWT.Selection, new Listener() {
+			MenuItem deviceMenuItem = new MenuItem(deviceSubMenu, SWT.PUSH);
+			deviceMenuItem.setText(device);
+			deviceMenuItem.addListener(SWT.Selection, new Listener() {
 
 				@Override
 				public void handleEvent(Event arg0) {
@@ -129,6 +129,16 @@ public class TestGUI {
 				}
 			});
 		}
+
+		MenuItem helpItem = new MenuItem(menu, SWT.CASCADE);
+		helpItem.setText("&Help");
+
+		Menu helpSubMenu = new Menu(shell, SWT.DROP_DOWN);
+		helpItem.setMenu(helpSubMenu);
+
+		MenuItem aboutMenuItem = new MenuItem(helpSubMenu, SWT.PUSH);
+		aboutMenuItem.setText("&About");
+		aboutMenuItem.addListener(SWT.Selection, new AboutListener());
 
 		Composite topComp = new Composite(shell, SWT.NONE | SWT.FILL);
 		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
