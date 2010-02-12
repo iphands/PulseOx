@@ -108,6 +108,16 @@ public class TestGUI {
 		deviceItem.setMenu(subMenu);
 
 		String[] deviceArray = DeviceChooser.getDevList();
+
+		// deviceItem.addListener(SWT.PUSH, new Listener() {
+		//
+		// @Override
+		// public void handleEvent(Event arg0) {
+		// deviceArray = DeviceChooser.getDevList();
+		//
+		// }
+		// });
+
 		for (final String device : deviceArray) {
 			MenuItem item = new MenuItem(subMenu, SWT.PUSH);
 			item.setText(device);
