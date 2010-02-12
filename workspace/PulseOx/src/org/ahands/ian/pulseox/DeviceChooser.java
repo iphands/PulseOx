@@ -2,6 +2,7 @@ package org.ahands.ian.pulseox;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
@@ -29,6 +30,8 @@ public class DeviceChooser {
 				fileStrList.add(fileStr);
 			}
 		}
+
+		Collections.reverse(fileStrList);
 
 		return (String[]) fileStrList.toArray(new String[0]);
 	}
