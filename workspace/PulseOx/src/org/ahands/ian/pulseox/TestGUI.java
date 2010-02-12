@@ -175,7 +175,7 @@ public class TestGUI {
 
 		canvas = new Canvas(waveFormGroup, SWT.NONE);
 		canvas.setSize(200, 128);
-		canvas.setLocation(5, 20);
+		canvas.setLocation((shell.getBounds().x / 2) - 200, 30);
 		canvas.setBackground(new Color(Display.getCurrent(), 0, 0, 0));
 
 		canvas.addPaintListener(new PaintListener() {
