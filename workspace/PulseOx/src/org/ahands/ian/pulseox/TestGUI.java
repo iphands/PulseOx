@@ -43,6 +43,7 @@ public class TestGUI {
 
 		Shell shell = new Shell(display, SWT.SHELL_TRIM);
 		shell.setText("PulseOx");
+		shell.setSize(278, 346);
 
 		center(shell);
 		initUI(shell);
@@ -64,6 +65,8 @@ public class TestGUI {
 		Thread trayUpdater = new Thread(new TrayUpdater(display, shell,
 				fileListener, trayImage, trayItem, trayGc));
 		trayUpdater.start();
+
+		// System.out.println(shell.getBounds());
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -177,31 +180,39 @@ public class TestGUI {
 		bpmLabel.setBounds(heartBPMLabel.getBounds().width + 10, (heartBPMLabel
 				.getBounds().height + 20) - 15, 30, 15);
 
-		Composite bottomComp = new Composite(shell, SWT.NONE);
-		bottomComp.setLayout(new RowLayout(SWT.VERTICAL));
+		final Composite bottomComp = new Composite(shell, SWT.NONE);
+		bottomComp.setLayout(new FillLayout());
 
-		Group waveFormGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
+		Group waveFormGroup = new Group(bottomComp, SWT.SHADOW_ETCHED_IN
+				| SWT.FILL);
 		waveFormGroup.setText("Wave Form");
 
 		canvas = new Canvas(waveFormGroup, SWT.NONE);
 		canvas.setSize(200, 128);
-		canvas.setLocation(19, 30);
+		canvas.setLocation(31, 30);
+
 		canvas.setBackground(new Color(Display.getCurrent(), 0, 0, 0));
 
 		canvas.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent pEvent) {
+
 				waveFormGc = new GC(canvas);
 				waveFormGc.setForeground(pEvent.display
 						.getSystemColor(SWT.COLOR_GREEN));
 
 				fileListener.setGC(waveFormGc, canvas, canvas.getClientArea());
-				canvas.setLocation((shell.getBounds().width / 2)
-						- (canvas.getBounds().width / 2), 30);
-				// System.out.println("DEBUG " + ((shell.getBounds().width)));
+
+				final Rectangle canvasRect = canvas.getBounds();
+				final Rectangle bottomCompRect = bottomComp.getBounds();
+				canvas.setLocation(((bottomCompRect.width / 2))
+						- ((canvasRect.width / 2)), 30);
+
+				System.out.println(canvasRect);
+				System.out.println(bottomCompRect);
+
 			}
 		});
-
 	}
 
 	public void center(Shell shell) {
