@@ -178,7 +178,7 @@ public class TestGUI {
 
 		final Label bpmLabel = new Label(heartRateGroup, SWT.CENTER);
 		bpmLabel.setText("bpm");
-		bpmLabel.setBounds(heartBPMLabel.getBounds().width + 10, (heartBPMLabel
+		bpmLabel.setBounds(heartBPMLabel.getBounds().width + 20, (heartBPMLabel
 				.getBounds().height + 20) - 15, 30, 15);
 
 		final Composite bottomComp = new Composite(shell, SWT.NONE);
