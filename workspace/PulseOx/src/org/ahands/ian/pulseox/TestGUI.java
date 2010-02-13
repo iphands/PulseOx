@@ -159,6 +159,14 @@ public class TestGUI {
 		oxySatLabel.setText("--");
 		oxySatLabel.setBounds(20, 20, 80, 40);
 
+		final Label percentLabel = new Label(oxygenSatGroup, SWT.CENTER);
+		percentLabel.setText("%");
+		percentLabel.setBounds(oxySatLabel.getBounds().width + 10, (oxySatLabel
+				.getBounds().height + 20) - 15, 20, 15);
+		// percentLabel.setBackground(oxySatLabel.getBackground());
+
+		// percentLabel.setBounds(20, 20, 80, 40);
+
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
 
@@ -166,6 +174,11 @@ public class TestGUI {
 		heartBPMLabel.setFont(bigFont);
 		heartBPMLabel.setText("--");
 		heartBPMLabel.setBounds(20, 20, 80, 40);
+
+		Label bpmLabel = new Label(heartRateGroup, SWT.CENTER);
+		bpmLabel.setText("bpm");
+		bpmLabel.setBounds(heartBPMLabel.getBounds().width + 10, (heartBPMLabel
+				.getBounds().height + 20) - 15, 30, 15);
 
 		Composite bottomComp = new Composite(shell, SWT.NONE);
 		bottomComp.setLayout(new RowLayout(SWT.VERTICAL));
