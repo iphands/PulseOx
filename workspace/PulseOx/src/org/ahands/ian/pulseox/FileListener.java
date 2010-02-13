@@ -133,6 +133,7 @@ public class FileListener implements Runnable {
 		final int X_MAX = 200;
 		int oldHeartRate = 0;
 		int oldOxygenSat = 0;
+		int failCount = 0;
 
 		final DateFormat dateFormat = new SimpleDateFormat(
 				"yyyy/MM/dd HH:mm:ss.S");
@@ -162,8 +163,14 @@ public class FileListener implements Runnable {
 					if (heartRate > 127 || oxygenSat > 127 || heartRate <= 0
 							|| oxygenSat <= 0) {
 
-						blankLabels();
+						failCount++;
+
+						if (failCount >= 10) {
+							blankLabels();
+						}
 						continue;
+					} else {
+						failCount = 0;
 					}
 
 					if ((oldHeartRate != heartRate)
