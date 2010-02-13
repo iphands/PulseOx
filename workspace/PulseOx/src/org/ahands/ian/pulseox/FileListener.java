@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -210,7 +211,10 @@ public class FileListener implements Runnable {
 								color = shell.getBackground();
 							}
 							oxygenSatGroup.setBackground(color);
-							oxySatLabel.setBackground(color);
+
+							for (Control comp : oxygenSatGroup.getChildren()) {
+								comp.setBackground(color);
+							}
 
 						}
 					});
