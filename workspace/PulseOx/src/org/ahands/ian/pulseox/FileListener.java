@@ -116,7 +116,7 @@ public class FileListener implements Runnable {
 		int oldOxygenSat = 0;
 
 		final DateFormat dateFormat = new SimpleDateFormat(
-				"yyyy/MM/dd HH:mm:ss:S");
+				"yyyy/MM/dd HH:mm:ss.S");
 
 		System.out.println("BPM, o2");
 		while (!shell.isDisposed()) {
@@ -140,9 +140,16 @@ public class FileListener implements Runnable {
 					heartRate = deviceReader.read();
 					oxygenSat = deviceReader.read();
 
-					if (heartRate > 127 || oxygenSat > 127) {
-						continue;
-					} else if (heartRate <= 0 || oxygenSat <= 0) {
+					if (heartRate > 127 || oxygenSat > 127 || heartRate <= 0
+							|| oxygenSat <= 0) {
+
+						oxySatLabel.setText("--");
+						heartBPMLabel.setText("--");
+
+						for (Control comp : oxygenSatGroup.getChildren()) {
+							comp.setBackground(shell.getBackground());
+						}
+
 						continue;
 					}
 
