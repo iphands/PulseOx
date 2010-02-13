@@ -208,9 +208,6 @@ public class TestGUI {
 				canvas.setLocation(((bottomCompRect.width / 2))
 						- ((canvasRect.width / 2)), 30);
 
-				System.out.println(canvasRect);
-				System.out.println(bottomCompRect);
-
 			}
 		});
 	}
