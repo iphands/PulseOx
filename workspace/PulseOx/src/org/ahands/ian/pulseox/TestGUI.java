@@ -141,6 +141,7 @@ public class TestGUI {
 
 		MenuItem aboutMenuItem = new MenuItem(helpSubMenu, SWT.PUSH);
 		aboutMenuItem.setText("&About");
+		// aboutMenuItem.setImage(Display.getCurrent().getSystemImage(SWT.ARROW));
 		aboutMenuItem.addListener(SWT.Selection, new AboutListener());
 
 		Composite topComp = new Composite(shell, SWT.NONE | SWT.FILL);
