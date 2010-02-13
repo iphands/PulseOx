@@ -188,8 +188,7 @@ public class TestGUI {
 				fileListener.setGC(waveFormGc, canvas, canvas.getClientArea());
 				canvas.setLocation((shell.getBounds().width / 2)
 						- (canvas.getBounds().width / 2), 30);
-				System.out.println("DEBUG " + ((shell.getBounds().width)));
-
+				// System.out.println("DEBUG " + ((shell.getBounds().width)));
 			}
 		});
 
