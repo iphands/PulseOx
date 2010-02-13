@@ -143,12 +143,19 @@ public class FileListener implements Runnable {
 					if (heartRate > 127 || oxygenSat > 127 || heartRate <= 0
 							|| oxygenSat <= 0) {
 
-						oxySatLabel.setText("--");
-						heartBPMLabel.setText("--");
+						Display.getDefault().asyncExec(new Runnable() {
 
-						for (Control comp : oxygenSatGroup.getChildren()) {
-							comp.setBackground(shell.getBackground());
-						}
+							@Override
+							public void run() {
+								oxySatLabel.setText("--");
+								heartBPMLabel.setText("--");
+
+								for (Control comp : oxygenSatGroup
+										.getChildren()) {
+									comp.setBackground(shell.getBackground());
+								}
+							}
+						});
 
 						continue;
 					}
@@ -231,7 +238,7 @@ public class FileListener implements Runnable {
 				} else {
 					System.err.println("debug: waiting for control character ("
 							+ controlInt + ")");
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				}
 
 			} catch (IOException e) {
