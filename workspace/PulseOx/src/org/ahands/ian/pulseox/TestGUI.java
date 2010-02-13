@@ -85,7 +85,7 @@ public class TestGUI {
 		}
 	}
 
-	public void initUI(Shell shell) {
+	public void initUI(final Shell shell) {
 
 		RowLayout vertRowLayout = new RowLayout(SWT.VERTICAL);
 		vertRowLayout.marginTop = 10;
@@ -175,7 +175,7 @@ public class TestGUI {
 
 		canvas = new Canvas(waveFormGroup, SWT.NONE);
 		canvas.setSize(200, 128);
-		canvas.setLocation((shell.getBounds().x / 2) - 200, 30);
+		canvas.setLocation(19, 30);
 		canvas.setBackground(new Color(Display.getCurrent(), 0, 0, 0));
 
 		canvas.addPaintListener(new PaintListener() {
@@ -186,8 +186,13 @@ public class TestGUI {
 						.getSystemColor(SWT.COLOR_GREEN));
 
 				fileListener.setGC(waveFormGc, canvas, canvas.getClientArea());
+				canvas.setLocation((shell.getBounds().width / 2)
+						- (canvas.getBounds().width / 2), 30);
+				System.out.println("DEBUG " + ((shell.getBounds().width)));
+
 			}
 		});
+
 	}
 
 	public void center(Shell shell) {
