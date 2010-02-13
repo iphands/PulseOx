@@ -87,6 +87,25 @@ public class FileListener implements Runnable {
 		return oxygenSat;
 	}
 
+	public synchronized void blankLabels() {
+		Display.getDefault().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				oxySatLabel.setText("--");
+				heartBPMLabel.setText("--");
+
+				for (Control comp : oxygenSatGroup.getParent().getChildren()) {
+					comp.setBackground(shell.getBackground());
+				}
+
+				for (Control comp : oxygenSatGroup.getChildren()) {
+					comp.setBackground(shell.getBackground());
+				}
+			}
+		});
+	}
+
 	public void run() {
 
 		BufferedReader deviceReader = null;
@@ -143,20 +162,7 @@ public class FileListener implements Runnable {
 					if (heartRate > 127 || oxygenSat > 127 || heartRate <= 0
 							|| oxygenSat <= 0) {
 
-						Display.getDefault().asyncExec(new Runnable() {
-
-							@Override
-							public void run() {
-								oxySatLabel.setText("--");
-								heartBPMLabel.setText("--");
-
-								for (Control comp : oxygenSatGroup
-										.getChildren()) {
-									comp.setBackground(shell.getBackground());
-								}
-							}
-						});
-
+						blankLabels();
 						continue;
 					}
 
@@ -236,6 +242,7 @@ public class FileListener implements Runnable {
 					Thread.sleep(20);
 
 				} else {
+					blankLabels();
 					System.err.println("debug: waiting for control character ("
 							+ controlInt + ")");
 					Thread.sleep(100);
