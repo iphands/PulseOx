@@ -19,7 +19,8 @@
 	<attribute name="Class-Path" value="." />
       </manifest>
       <fileset dir="./bin" />
-      <zipgroupfileset refid="externjars" />
+      <fileset dir="./resources" />
+      <zipgroupfileset refid="externjars" />      
     </jar>
   </target>
 </project>
