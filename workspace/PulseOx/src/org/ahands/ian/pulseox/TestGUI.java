@@ -1,5 +1,9 @@
 package org.ahands.ian.pulseox;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -26,6 +30,8 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
 public class TestGUI {
+
+	static Logger logger = Logger.getLogger(TestGUI.class);
 
 	Label heartBPMLabel;
 	Label oxySatLabel;
@@ -66,13 +72,13 @@ public class TestGUI {
 				fileListener, trayImage, trayItem, trayGc));
 		trayUpdater.start();
 
-		// System.out.println(shell.getBounds());
-
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
+
+		System.exit(0);
 	}
 
 	public void initTray(Display display) {
@@ -103,6 +109,27 @@ public class TestGUI {
 
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
+
+		MenuItem fileItem = new MenuItem(menu, SWT.CASCADE);
+		fileItem.setText("&File");
+
+		Menu fileSubMenu = new Menu(shell, SWT.DROP_DOWN);
+		fileItem.setMenu(fileSubMenu);
+
+		MenuItem loggingMenuItem = new MenuItem(fileSubMenu, SWT.PUSH);
+		loggingMenuItem.setText("&Logging...");
+		loggingMenuItem.addListener(SWT.Selection, new LoggingListener());
+
+		new MenuItem(fileSubMenu, SWT.SEPARATOR);
+
+		MenuItem testMenuItem = new MenuItem(fileSubMenu, SWT.PUSH);
+		testMenuItem.setText("E&xit");
+		testMenuItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				System.exit(0);
+			}
+		});
 
 		MenuItem deviceItem = new MenuItem(menu, SWT.CASCADE);
 		deviceItem.setText("&Device");
@@ -191,7 +218,6 @@ public class TestGUI {
 		canvas = new Canvas(waveFormGroup, SWT.NONE);
 		canvas.setSize(200, 128);
 		canvas.setLocation(31, 30);
-
 		canvas.setBackground(new Color(Display.getCurrent(), 0, 0, 0));
 
 		canvas.addPaintListener(new PaintListener() {
@@ -225,8 +251,17 @@ public class TestGUI {
 		shell.setBounds(nLeft, nTop, p.x, p.y);
 	}
 
+	private static void initLog() {
+		final Logger rootLogger = Logger.getRootLogger();
+		rootLogger.setLevel(Level.DEBUG);
+		rootLogger.addAppender(new ConsoleAppender(new SimpleLayout()));
+		return;
+	}
+
 	public static void main(String[] args) {
 		Display display = new Display();
+
+		initLog();
 
 		new TestGUI(display);
 		display.dispose();
