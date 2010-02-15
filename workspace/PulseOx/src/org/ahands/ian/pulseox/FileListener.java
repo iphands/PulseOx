@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -20,6 +21,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class FileListener implements Runnable {
+
+	Logger logger = Logger.getLogger(FileListener.class);
 
 	Display display = Display.getCurrent();
 	Shell shell = null;
@@ -116,8 +119,7 @@ public class FileListener implements Runnable {
 
 			} catch (IOException e) {
 
-				System.err.println("Unable to open " + DEVICE
-						+ " trying again...");
+				logger.debug("Unable to open " + DEVICE + " trying again...");
 			}
 
 			try {
@@ -138,7 +140,7 @@ public class FileListener implements Runnable {
 		final DateFormat dateFormat = new SimpleDateFormat(
 				"yyyy/MM/dd HH:mm:ss.S");
 
-		System.out.println("BPM, o2");
+		logger.info("BPM, o2");
 		while (!shell.isDisposed()) {
 			try {
 				if (counter >= 400) {
@@ -146,7 +148,7 @@ public class FileListener implements Runnable {
 					deviceReader = new BufferedReader(new FileReader(new File(
 							DEVICE)));
 					counter = 0;
-					System.err.println("debug: flush test");
+					logger.debug("flushing buffer");
 				} else {
 					counter++;
 				}
@@ -176,7 +178,7 @@ public class FileListener implements Runnable {
 					if ((oldHeartRate != heartRate)
 							|| (oldOxygenSat != oxygenSat)) {
 
-						System.out.println(dateFormat.format(new Date()) + ","
+						logger.info(dateFormat.format(new Date()) + ","
 								+ heartRate + "," + oxygenSat);
 
 					}
@@ -250,8 +252,8 @@ public class FileListener implements Runnable {
 
 				} else {
 					blankLabels();
-					System.err.println("debug: waiting for control character ("
-							+ controlInt + ")");
+					logger.debug("waiting for control character (" + controlInt
+							+ ")");
 					Thread.sleep(100);
 				}
 
