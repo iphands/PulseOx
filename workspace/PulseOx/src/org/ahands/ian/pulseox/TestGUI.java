@@ -104,7 +104,10 @@ public class TestGUI {
 		vertRowLayout.spacing = 10;
 		vertRowLayout.wrap = true;
 		vertRowLayout.fill = true;
-		vertRowLayout.justify = false;
+		vertRowLayout.justify = true;
+
+		// FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+
 		shell.setLayout(vertRowLayout);
 
 		Menu menu = new Menu(shell, SWT.BAR);
@@ -171,7 +174,7 @@ public class TestGUI {
 		// aboutMenuItem.setImage(Display.getCurrent().getSystemImage(SWT.ARROW));
 		aboutMenuItem.addListener(SWT.Selection, new AboutListener());
 
-		Composite topComp = new Composite(shell, SWT.NONE | SWT.FILL);
+		Composite topComp = new Composite(shell, SWT.NONE);
 		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
 		Font initialFont = shell.getFont();
@@ -182,12 +185,13 @@ public class TestGUI {
 
 		Font bigFont = new Font(Display.getCurrent(), fontData);
 
-		oxygenSatGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN);
+		oxygenSatGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.CENTER);
 		oxygenSatGroup.setText("Oxygen Saturation");
 
 		oxySatLabel = new Label(oxygenSatGroup, SWT.CENTER);
 		oxySatLabel.setFont(bigFont);
 		oxySatLabel.setText("--");
+		oxySatLabel.setSize(80, 40);
 		oxySatLabel.setBounds(20, 20, 80, 40);
 
 		final Label percentLabel = new Label(oxygenSatGroup, SWT.CENTER);
