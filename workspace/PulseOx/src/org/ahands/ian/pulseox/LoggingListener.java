@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -12,6 +14,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -44,31 +47,18 @@ public class LoggingListener implements Listener {
 		shell.pack();
 		shell.open();
 
-		RowLayout vertRowLayout = new RowLayout(SWT.VERTICAL);
-		vertRowLayout.marginTop = 10;
-		vertRowLayout.marginBottom = 10;
-		vertRowLayout.marginLeft = 5;
-		vertRowLayout.marginRight = 5;
-		vertRowLayout.spacing = 10;
-		vertRowLayout.wrap = true;
-		vertRowLayout.fill = true;
-		vertRowLayout.justify = true;
+		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+		fillLayout.spacing = 8;
+		fillLayout.marginHeight = 8;
+		fillLayout.marginWidth = 8;
 
-		// GridLayout gridLayout = new GridLayout();
-		// gridLayout.numColumns = 3;
-
-		// shell.setLayout(vertRowLayout);
-		shell.setLayout(new FillLayout(SWT.VERTICAL));
-
-		// Group outerGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
-
-		Button enableLoggingButton = new Button(shell, SWT.CHECK);
-		enableLoggingButton.setText("Enable logging?");
+		shell.setLayout(fillLayout);
 
 		doFileBased();
 		doConsoleBased();
 
-		shell.pack();
+		// shell.pack();
+		shell.setSize(400, 300);
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -78,38 +68,64 @@ public class LoggingListener implements Listener {
 	}
 
 	private void doFileBased() {
-		Group fileLoggingGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
+		final Group fileLoggingGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
 		fileLoggingGroup.setText("File based");
 		fileLoggingGroup.setLayout(new FillLayout(SWT.VERTICAL));
 
-		Button enableFileButton = new Button(fileLoggingGroup, SWT.CHECK);
-		enableFileButton.setText("Enable/Disable");
+		final Composite topComp = new Composite(fileLoggingGroup, SWT.NONE);
+		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		Composite pathComp = new Composite(fileLoggingGroup, SWT.NONE);
-		pathComp.setLayout(new FillLayout(SWT.HORIZONTAL));
+		final Button enableFileButton = new Button(topComp, SWT.TOGGLE);
+		enableFileButton.setText("Enable");
+		enableFileButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				if (enableFileButton.getSelection()) {
+					enableFileButton.setText("Disable");
+				} else {
+					enableFileButton.setText("Enable");
+				}
+			}
+		});
 
-		Label pathTitleLabel = new Label(pathComp, SWT.LEFT);
+		final Composite pathComp = new Composite(fileLoggingGroup, SWT.NONE);
+		pathComp.setLayout(new RowLayout(SWT.HORIZONTAL));
+
+		final Label pathTitleLabel = new Label(pathComp, SWT.LEFT);
 		pathTitleLabel.setText("Path: ");
 
-		Label pathLabel = new Label(pathComp, SWT.LEFT);
-		pathLabel.setText(" -- ");
+		final Label pathLabel = new Label(pathComp, SWT.LEFT);
+		pathLabel.setText("/tmp/pulseox.log");
 
-		Button pathButton = new Button(pathComp, SWT.CENTER);
+		final Button pathButton = new Button(topComp, SWT.CENTER);
 		pathButton.setText("Browse");
 
-		Composite levelComp = new Composite(fileLoggingGroup, SWT.NONE);
+		pathButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+				String path = dialog.open();
+				if (path != null) {
+					pathLabel.setText(path);
+					pathLabel.redraw();
+					shell.pack();
+				}
+			}
+		});
+
+		final Composite levelComp = new Composite(fileLoggingGroup, SWT.NONE);
 		levelComp.setLayout(new FillLayout(SWT.VERTICAL));
 
-		Composite levelInnerComp = new Composite(levelComp, SWT.NONE);
-		levelInnerComp.setLayout(new FillLayout(SWT.HORIZONTAL));
+		final Composite levelInnerComp = new Composite(levelComp, SWT.NONE);
+		levelInnerComp.setLayout(new RowLayout(SWT.HORIZONTAL));
 
-		Label levelTitleLabel = new Label(levelInnerComp, SWT.LEFT);
+		final Label levelTitleLabel = new Label(levelInnerComp, SWT.LEFT);
 		levelTitleLabel.setText("Level: ");
 
 		final Label levelLabel = new Label(levelInnerComp, SWT.LEFT);
 		levelLabel.setText(" -- ");
 
 		final Label emptyLabel = new Label(levelInnerComp, SWT.LEFT);
+		emptyLabel.redraw();
 
 		final Scale levelScale = new Scale(levelComp, SWT.BORDER_DASH);
 		levelScale.setMinimum(0);
@@ -132,6 +148,8 @@ public class LoggingListener implements Listener {
 				} else if (SELECTION == 4) {
 					levelLabel.setText("Fatal");
 				}
+
+				levelLabel.pack();
 			}
 		});
 
@@ -139,26 +157,51 @@ public class LoggingListener implements Listener {
 	}
 
 	private void doConsoleBased() {
-		Group consoleLoggingGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
+		final Group consoleLoggingGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
 		consoleLoggingGroup.setText("Console based");
 		consoleLoggingGroup.setLayout(new FillLayout(SWT.VERTICAL));
 
-		Button enableFileButton = new Button(consoleLoggingGroup, SWT.CHECK);
-		enableFileButton.setText("Enable/Disable");
+		final Composite topComp = new Composite(consoleLoggingGroup, SWT.NONE);
+		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		Composite levelComp = new Composite(consoleLoggingGroup, SWT.NONE);
+		final Button enableFileButton = new Button(topComp, SWT.TOGGLE);
+		enableFileButton.setText("Enable");
+		enableFileButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				if (enableFileButton.getSelection()) {
+					enableFileButton.setText("Disable");
+				} else {
+					enableFileButton.setText("Enable");
+				}
+			}
+		});
+
+		final Label emptyLabel = new Label(topComp, SWT.LEFT);
+		emptyLabel.redraw();
+
+		final Composite pathComp = new Composite(consoleLoggingGroup, SWT.NONE);
+		pathComp.setLayout(new RowLayout(SWT.HORIZONTAL));
+
+		final Label fakePathTitleLabel = new Label(pathComp, SWT.LEFT);
+		fakePathTitleLabel.redraw();
+		// pathTitleLabel.setText("Path: ");
+
+		final Label fakePathLabel = new Label(pathComp, SWT.LEFT);
+		fakePathLabel.redraw();
+		// pathLabel.setText(" -- ");
+
+		final Composite levelComp = new Composite(consoleLoggingGroup, SWT.NONE);
 		levelComp.setLayout(new FillLayout(SWT.VERTICAL));
 
-		Composite levelInnerComp = new Composite(levelComp, SWT.NONE);
-		levelInnerComp.setLayout(new FillLayout(SWT.HORIZONTAL));
+		final Composite levelInnerComp = new Composite(levelComp, SWT.NONE);
+		levelInnerComp.setLayout(new RowLayout(SWT.HORIZONTAL));
 
-		Label levelTitleLabel = new Label(levelInnerComp, SWT.LEFT);
+		final Label levelTitleLabel = new Label(levelInnerComp, SWT.LEFT);
 		levelTitleLabel.setText("Level: ");
 
 		final Label levelLabel = new Label(levelInnerComp, SWT.LEFT);
 		levelLabel.setText(" -- ");
-
-		final Label emptyLabel = new Label(levelInnerComp, SWT.LEFT);
 
 		final Scale levelScale = new Scale(levelComp, SWT.BORDER_DASH);
 		levelScale.setMinimum(0);
@@ -181,6 +224,7 @@ public class LoggingListener implements Listener {
 				} else if (SELECTION == 4) {
 					levelLabel.setText("Fatal");
 				}
+				levelLabel.pack();
 			}
 		});
 
