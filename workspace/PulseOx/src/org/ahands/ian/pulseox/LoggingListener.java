@@ -8,7 +8,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -17,6 +20,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
@@ -24,13 +28,14 @@ import org.eclipse.swt.widgets.Shell;
 public class LoggingListener implements Listener {
 	Image handsImage;
 	Shell shell;
+	GridData gridData;
 
 	@Override
 	public void handleEvent(Event arg0) {
 
-		Display display = Display.getCurrent();
-		// shell = new Shell(display, SWT.TITLE | SWT.CLOSE);
-		shell = new Shell(display);
+		final Display display = Display.getCurrent();
+		shell = new Shell(display, SWT.RESIZE | SWT.TITLE | SWT.CLOSE);
+		// shell = new Shell(display);
 		shell.setText("Logging...");
 
 		try {
@@ -47,18 +52,29 @@ public class LoggingListener implements Listener {
 		shell.pack();
 		shell.open();
 
-		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+		final FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
 		fillLayout.spacing = 8;
 		fillLayout.marginHeight = 8;
 		fillLayout.marginWidth = 8;
 
-		shell.setLayout(fillLayout);
+		final GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		gridLayout.horizontalSpacing = 20;
+		gridLayout.marginWidth = 8;
+		// gridLayout.makeColumnsEqualWidth = true;
+
+		gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.minimumWidth = 200;
+		gridData.grabExcessHorizontalSpace = true;
+
+		shell.setLayout(gridLayout);
 
 		doFileBased();
 		doConsoleBased();
+		doSave();
 
-		// shell.pack();
-		shell.setSize(400, 300);
+		shell.pack();
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -67,10 +83,34 @@ public class LoggingListener implements Listener {
 		}
 	}
 
+	private void doSave() {
+		final GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.minimumWidth = 250;
+		gridData.grabExcessHorizontalSpace = true;
+
+		final FillLayout fillLayout = new FillLayout(SWT.HORIZONTAL);
+		fillLayout.spacing = 8;
+		fillLayout.marginHeight = 16;
+		fillLayout.marginWidth = 8;
+
+		final Composite saveComp = new Composite(shell, SWT.NONE);
+		saveComp.setLayout(fillLayout);
+		saveComp.setLayoutData(gridData);
+
+		final Button applyButton = new Button(saveComp, SWT.PUSH);
+		applyButton.setText("&Apply");
+
+		final Button saveButton = new Button(saveComp, SWT.PUSH);
+		saveButton.setText("&Save");
+	}
+
 	private void doFileBased() {
+
 		final Group fileLoggingGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
 		fileLoggingGroup.setText("File based");
 		fileLoggingGroup.setLayout(new FillLayout(SWT.VERTICAL));
+		fileLoggingGroup.setLayoutData(gridData);
 
 		final Composite topComp = new Composite(fileLoggingGroup, SWT.NONE);
 		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -98,7 +138,7 @@ public class LoggingListener implements Listener {
 		pathLabel.setText("/tmp/pulseox.log");
 
 		final Button pathButton = new Button(topComp, SWT.CENTER);
-		pathButton.setText("Browse");
+		pathButton.setText("&Browse");
 
 		pathButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -160,6 +200,7 @@ public class LoggingListener implements Listener {
 		final Group consoleLoggingGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
 		consoleLoggingGroup.setText("Console based");
 		consoleLoggingGroup.setLayout(new FillLayout(SWT.VERTICAL));
+		consoleLoggingGroup.setLayoutData(gridData);
 
 		final Composite topComp = new Composite(consoleLoggingGroup, SWT.NONE);
 		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
