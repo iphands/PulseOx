@@ -258,7 +258,7 @@ public class TestGUI {
 	private static void initLog() {
 		final Logger rootLogger = Logger.getRootLogger();
 		rootLogger.setLevel(Level.DEBUG);
-		rootLogger.addAppender(new ConsoleAppender(new SimpleLayout()));
+		// rootLogger.addAppender(new ConsoleAppender(new SimpleLayout()));
 		return;
 	}
 
