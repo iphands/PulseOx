@@ -1,14 +1,18 @@
 package org.ahands.ian.pulseox;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.SimpleLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,7 +24,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
@@ -29,6 +32,20 @@ public class LoggingListener implements Listener {
 	Image handsImage;
 	Shell shell;
 	GridData gridData;
+	Logger logger = Logger.getLogger(LoggingListener.class);
+
+	boolean fileOn = false;
+	boolean fileChange = false;
+	String filePath = "/tmp/pulseox.log";
+	Level fileLevel = Level.INFO;
+	FileAppender fileAppender = null;
+
+	boolean consoleOn = false;
+	Level consoleLevel = Level.DEBUG;
+	final ConsoleAppender consoleAppender = new ConsoleAppender(
+			new SimpleLayout());
+
+	Button applyButton;
 
 	@Override
 	public void handleEvent(Event arg0) {
@@ -38,16 +55,16 @@ public class LoggingListener implements Listener {
 		// shell = new Shell(display);
 		shell.setText("Logging...");
 
-		try {
-			handsImage = new Image(display, new FileInputStream(new File(
-					"hands-50.png")));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			handsImage = null;
-			e.printStackTrace();
-		}
-
-		shell.setImage(handsImage);
+		// try {
+		// handsImage = new Image(display, new FileInputStream(new File(
+		// "./hands-50.png")));
+		// } catch (FileNotFoundException e) {
+		// // TODO Auto-generated catch block
+		// handsImage = null;
+		// e.printStackTrace();
+		// }
+		//
+		// shell.setImage(handsImage);
 
 		shell.pack();
 		shell.open();
@@ -98,11 +115,80 @@ public class LoggingListener implements Listener {
 		saveComp.setLayout(fillLayout);
 		saveComp.setLayoutData(gridData);
 
-		final Button applyButton = new Button(saveComp, SWT.PUSH);
+		applyButton = new Button(saveComp, SWT.PUSH);
 		applyButton.setText("&Apply");
+		applyButton.setEnabled(false);
 
 		final Button saveButton = new Button(saveComp, SWT.PUSH);
 		saveButton.setText("&Save");
+		saveButton.setEnabled(false);
+
+		applyButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				Logger rootLogger = Logger.getRootLogger();
+
+				if (consoleOn) {
+					rootLogger.removeAppender(consoleAppender);
+					rootLogger.addAppender(consoleAppender);
+					consoleAppender.setThreshold(consoleLevel);
+				} else {
+					rootLogger.removeAppender(consoleAppender);
+				}
+
+				if (fileOn) {
+					if (fileAppender == null || fileChange) {
+
+						rootLogger.removeAppender(fileAppender);
+						fileAppender = null;
+
+						Layout fileLayout = new PatternLayout("%m\n");
+
+						try {
+							fileAppender = new FileAppender(fileLayout,
+									filePath);
+
+						} catch (IOException e) {
+							final String ERROR_MESSAGE = "Unable to open file "
+									+ filePath + " for logging";
+							if (consoleOn) {
+								logger.error(ERROR_MESSAGE);
+							} else {
+								System.err.println(ERROR_MESSAGE);
+							}
+							e.printStackTrace();
+						}
+
+						fileAppender.setThreshold(fileLevel);
+						rootLogger.addAppender(fileAppender);
+					}
+
+				} else {
+					rootLogger.removeAppender(fileAppender);
+					fileAppender = null;
+				}
+
+				saveButton.setEnabled(true);
+				applyButton.setEnabled(false);
+			}
+		});
+
+		saveButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				// Logger rootLogger = Logger.getRootLogger();
+
+			}
+		});
+
+		final Button closeButton = new Button(saveComp, SWT.PUSH);
+		closeButton.setText("&Close");
+		closeButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				shell.dispose();
+			}
+		});
 	}
 
 	private void doFileBased() {
@@ -122,9 +208,12 @@ public class LoggingListener implements Listener {
 			public void handleEvent(Event e) {
 				if (enableFileButton.getSelection()) {
 					enableFileButton.setText("Disable");
+					fileOn = true;
 				} else {
 					enableFileButton.setText("Enable");
+					fileOn = false;
 				}
+				applyButton.setEnabled(true);
 			}
 		});
 
@@ -135,7 +224,7 @@ public class LoggingListener implements Listener {
 		pathTitleLabel.setText("Path: ");
 
 		final Label pathLabel = new Label(pathComp, SWT.LEFT);
-		pathLabel.setText("/tmp/pulseox.log");
+		pathLabel.setText(filePath);
 
 		final Button pathButton = new Button(topComp, SWT.CENTER);
 		pathButton.setText("&Browse");
@@ -143,12 +232,14 @@ public class LoggingListener implements Listener {
 		pathButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-				String path = dialog.open();
-				if (path != null) {
-					pathLabel.setText(path);
-					pathLabel.redraw();
+				filePath = dialog.open();
+				if (filePath != null) {
+					fileChange = true;
+					pathLabel.setText(filePath);
 					shell.pack();
 				}
+				pathLabel.pack();
+				applyButton.setEnabled(true);
 			}
 		});
 
@@ -162,7 +253,7 @@ public class LoggingListener implements Listener {
 		levelTitleLabel.setText("Level: ");
 
 		final Label levelLabel = new Label(levelInnerComp, SWT.LEFT);
-		levelLabel.setText(" -- ");
+		levelLabel.setText(fileLevel.toString());
 
 		final Label emptyLabel = new Label(levelInnerComp, SWT.LEFT);
 		emptyLabel.redraw();
@@ -178,18 +269,20 @@ public class LoggingListener implements Listener {
 			public void handleEvent(Event arg0) {
 				final int SELECTION = levelScale.getSelection();
 				if (SELECTION <= 0) {
-					levelLabel.setText("Debug");
+					fileLevel = Level.DEBUG;
 				} else if (SELECTION == 1) {
-					levelLabel.setText("Info");
+					fileLevel = Level.INFO;
 				} else if (SELECTION == 2) {
-					levelLabel.setText("Warn");
+					fileLevel = Level.WARN;
 				} else if (SELECTION == 3) {
-					levelLabel.setText("Error");
+					fileLevel = Level.ERROR;
 				} else if (SELECTION == 4) {
-					levelLabel.setText("Fatal");
+					fileLevel = Level.FATAL;
 				}
 
+				levelLabel.setText(fileLevel.toString());
 				levelLabel.pack();
+				applyButton.setEnabled(true);
 			}
 		});
 
@@ -212,9 +305,12 @@ public class LoggingListener implements Listener {
 			public void handleEvent(Event e) {
 				if (enableFileButton.getSelection()) {
 					enableFileButton.setText("Disable");
+					consoleOn = true;
 				} else {
 					enableFileButton.setText("Enable");
+					consoleOn = false;
 				}
+				applyButton.setEnabled(true);
 			}
 		});
 
@@ -242,7 +338,7 @@ public class LoggingListener implements Listener {
 		levelTitleLabel.setText("Level: ");
 
 		final Label levelLabel = new Label(levelInnerComp, SWT.LEFT);
-		levelLabel.setText(" -- ");
+		levelLabel.setText(consoleLevel.toString());
 
 		final Scale levelScale = new Scale(levelComp, SWT.BORDER_DASH);
 		levelScale.setMinimum(0);
@@ -255,17 +351,20 @@ public class LoggingListener implements Listener {
 			public void handleEvent(Event arg0) {
 				final int SELECTION = levelScale.getSelection();
 				if (SELECTION <= 0) {
-					levelLabel.setText("Debug");
+					consoleLevel = Level.DEBUG;
 				} else if (SELECTION == 1) {
-					levelLabel.setText("Info");
+					consoleLevel = Level.INFO;
 				} else if (SELECTION == 2) {
-					levelLabel.setText("Warn");
+					consoleLevel = Level.WARN;
 				} else if (SELECTION == 3) {
-					levelLabel.setText("Error");
+					consoleLevel = Level.ERROR;
 				} else if (SELECTION == 4) {
-					levelLabel.setText("Fatal");
+					consoleLevel = Level.FATAL;
 				}
+
+				levelLabel.setText(consoleLevel.toString());
 				levelLabel.pack();
+				applyButton.setEnabled(true);
 			}
 		});
 
