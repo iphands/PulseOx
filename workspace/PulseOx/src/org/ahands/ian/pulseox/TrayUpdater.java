@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class TrayUpdater implements Runnable {
 
-	Shell shell;
+	// Shell shell;
 	FileListener fileListener;
 	Display display;
 	GC trayGc;
@@ -19,7 +19,7 @@ public class TrayUpdater implements Runnable {
 	public TrayUpdater(Display display, Shell shell, FileListener fileListener,
 			Image image, TrayItem trayItem, GC trayGc) {
 		this.display = display;
-		this.shell = shell;
+		// this.shell = shell;
 		this.fileListener = fileListener;
 		this.image = image;
 		this.trayItem = trayItem;

@@ -77,8 +77,6 @@ public class TestGUI {
 				display.sleep();
 			}
 		}
-
-		System.exit(0);
 	}
 
 	public void initTray(Display display) {
@@ -130,7 +128,8 @@ public class TestGUI {
 		testMenuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				System.exit(0);
+				// System.exit(0);
+				shell.dispose();
 			}
 		});
 

@@ -55,7 +55,6 @@ public class LoggingListener implements Listener {
 
 		final Display display = Display.getCurrent();
 		shell = new Shell(display, SWT.RESIZE | SWT.TITLE | SWT.CLOSE);
-		// shell = new Shell(display);
 		shell.setText("Logging...");
 
 		try {
@@ -161,8 +160,10 @@ public class LoggingListener implements Listener {
 							e.printStackTrace();
 						}
 
-						fileAppender.setThreshold(fileLevel);
-						rootLogger.addAppender(fileAppender);
+						if (fileAppender != null) {
+							fileAppender.setThreshold(fileLevel);
+							rootLogger.addAppender(fileAppender);
+						}
 					}
 
 				} else {
