@@ -46,7 +46,7 @@ public class AboutListener implements Listener {
 
 		try {
 			handsImage = new Image(display, new FileInputStream(new File(
-					"hands-50.png")));
+					"./resources/hands-50.png")));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			handsImage = null;

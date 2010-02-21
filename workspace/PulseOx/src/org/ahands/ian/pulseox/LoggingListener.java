@@ -1,5 +1,8 @@
 package org.ahands.ian.pulseox;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.log4j.ConsoleAppender;
@@ -55,16 +58,15 @@ public class LoggingListener implements Listener {
 		// shell = new Shell(display);
 		shell.setText("Logging...");
 
-		// try {
-		// handsImage = new Image(display, new FileInputStream(new File(
-		// "./hands-50.png")));
-		// } catch (FileNotFoundException e) {
-		// // TODO Auto-generated catch block
-		// handsImage = null;
-		// e.printStackTrace();
-		// }
-		//
-		// shell.setImage(handsImage);
+		try {
+			handsImage = new Image(display, new FileInputStream(new File(
+					"./resources/hands-50.png")));
+		} catch (FileNotFoundException e) {
+			handsImage = null;
+			e.printStackTrace();
+		}
+
+		shell.setImage(handsImage);
 
 		shell.pack();
 		shell.open();
@@ -168,7 +170,8 @@ public class LoggingListener implements Listener {
 					fileAppender = null;
 				}
 
-				saveButton.setEnabled(true);
+				// Save button not ready for use yet
+				// saveButton.setEnabled(true);
 				applyButton.setEnabled(false);
 			}
 		});
