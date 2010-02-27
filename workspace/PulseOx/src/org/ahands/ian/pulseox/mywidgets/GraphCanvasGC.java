@@ -78,7 +78,7 @@ public abstract class GraphCanvasGC {
 							float h = canvas.getBounds().height;
 							float w = canvas.getBounds().width;
 							int scaled_x = x;
-							int scaled_y = y;
+							int scaled_y = y_max - y;
 
 							boolean overSized = false;
 
