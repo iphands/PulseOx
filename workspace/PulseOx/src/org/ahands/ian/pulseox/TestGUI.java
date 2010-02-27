@@ -1,9 +1,7 @@
 package org.ahands.ian.pulseox;
 
-import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -77,6 +75,8 @@ public class TestGUI {
 				display.sleep();
 			}
 		}
+
+		return;
 	}
 
 	public void initTray(Display display) {
@@ -119,13 +119,14 @@ public class TestGUI {
 
 		MenuItem loggingMenuItem = new MenuItem(fileSubMenu, SWT.PUSH);
 		loggingMenuItem.setText("&Logging...");
-		loggingMenuItem.addListener(SWT.Selection, new LoggingListener());
+		loggingMenuItem.addListener(SWT.Selection, LoggingListener
+				.getLoggingListener(shell));
 
 		new MenuItem(fileSubMenu, SWT.SEPARATOR);
 
-		MenuItem testMenuItem = new MenuItem(fileSubMenu, SWT.PUSH);
-		testMenuItem.setText("E&xit");
-		testMenuItem.addListener(SWT.Selection, new Listener() {
+		MenuItem exitMenuItem = new MenuItem(fileSubMenu, SWT.PUSH);
+		exitMenuItem.setText("E&xit");
+		exitMenuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
 				// System.exit(0);
@@ -171,7 +172,12 @@ public class TestGUI {
 		MenuItem aboutMenuItem = new MenuItem(helpSubMenu, SWT.PUSH);
 		aboutMenuItem.setText("&About");
 		// aboutMenuItem.setImage(Display.getCurrent().getSystemImage(SWT.ARROW));
-		aboutMenuItem.addListener(SWT.Selection, new AboutListener());
+		aboutMenuItem.addListener(SWT.Selection, new AboutListener(shell));
+
+		MenuItem testMenuItem = new MenuItem(helpSubMenu, SWT.PUSH);
+		testMenuItem.setText("&test");
+		// aboutMenuItem.setImage(Display.getCurrent().getSystemImage(SWT.ARROW));
+		testMenuItem.addListener(SWT.Selection, new testGraph(shell));
 
 		Composite topComp = new Composite(shell, SWT.NONE);
 		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -267,6 +273,20 @@ public class TestGUI {
 		initLog();
 
 		new TestGUI(display);
+
+		for (final Shell old_shell : Display.getDefault().getShells()) {
+			Display.getDefault().asyncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					System.err.println("disposing: " + old_shell.toString());
+					old_shell.dispose();
+				}
+			});
+		}
+
 		display.dispose();
+		System.exit(0);
 	}
 }

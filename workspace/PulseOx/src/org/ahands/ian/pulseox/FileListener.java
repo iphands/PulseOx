@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Control;
@@ -46,8 +47,8 @@ public class FileListener implements Runnable {
 
 	int[] coord = new int[] { 0, 0 };
 
-	int x;
-	int y;
+	static int x;
+	static int y;
 	int old_y;
 
 	final Color BLACK = display.getSystemColor(SWT.COLOR_BLACK);

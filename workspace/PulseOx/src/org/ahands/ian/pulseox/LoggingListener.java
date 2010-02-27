@@ -32,8 +32,11 @@ import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 
 public class LoggingListener implements Listener {
+	private static LoggingListener singleton = null;
 	Image handsImage;
+	Display display = null;
 	Shell shell;
+	Shell parent;
 	GridData gridData;
 	Logger logger = Logger.getLogger(LoggingListener.class);
 
@@ -50,11 +53,28 @@ public class LoggingListener implements Listener {
 
 	Button applyButton;
 
+	private LoggingListener() {
+		this.parent = new Shell(Display.getCurrent());
+	}
+
+	private LoggingListener(Shell shell) {
+		this.parent = shell;
+		this.display = shell.getDisplay();
+	}
+
+	public static LoggingListener getLoggingListener(Shell shell) {
+		if (singleton == null) {
+			System.err.println("TEST");
+			singleton = new LoggingListener(shell);
+		}
+		return singleton;
+	}
+
 	@Override
 	public void handleEvent(Event arg0) {
 
-		final Display display = Display.getCurrent();
-		shell = new Shell(display, SWT.RESIZE | SWT.TITLE | SWT.CLOSE);
+		// final Display display = Display.getCurrent();
+		shell = new Shell(parent, SWT.RESIZE | SWT.TITLE | SWT.CLOSE);
 		shell.setText("Logging...");
 
 		try {

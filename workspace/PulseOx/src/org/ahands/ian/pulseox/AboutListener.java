@@ -20,12 +20,17 @@ import org.eclipse.swt.widgets.Shell;
 
 public class AboutListener implements Listener {
 	Image handsImage;
+	Shell parent;
+
+	public AboutListener(Shell shell) {
+		this.parent = shell;
+	}
 
 	@Override
 	public void handleEvent(Event arg0) {
 
 		Display display = Display.getCurrent();
-		Shell shell = new Shell(display, SWT.TITLE | SWT.CLOSE);
+		Shell shell = new Shell(parent, SWT.TITLE | SWT.CLOSE);
 		shell.pack();
 		shell.open();
 

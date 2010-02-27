@@ -17,7 +17,7 @@ public class TitleUpdater implements Runnable {
 
 	public void run() {
 
-		while (!display.isDisposed()) {
+		while (!display.isDisposed() && shell.isDisposed()) {
 			display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
