@@ -123,8 +123,8 @@ public abstract class GraphCanvasGC {
 							// flip y
 							y = y_max - y;
 
-							float h = canvas.getParent().getBounds().height;
-							float w = canvas.getParent().getBounds().width;
+							float h = canvas.getBounds().height;
+							float w = canvas.getBounds().width;
 							int scaled_x = x;
 							int scaled_y = y;
 
@@ -156,7 +156,7 @@ public abstract class GraphCanvasGC {
 							waveFormGc.setForeground(GREEN);
 
 							if (scaled_x > old_x && scaled_x < w) {
-								waveFormGc.setLineWidth((int) ((h / y_max)));
+								waveFormGc.setLineWidth((int) ((h / y_max) * 2));
 
 								waveFormGc.drawLine(scaled_x, scaled_y, old_x,
 										old_y);
