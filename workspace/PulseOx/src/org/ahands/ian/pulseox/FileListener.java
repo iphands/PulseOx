@@ -28,7 +28,7 @@ public class FileListener implements Runnable {
 	Display display = Display.getCurrent();
 	Shell shell = null;
 	Label heartBPMLabel = null;
-	Label oxySatLabel = null;
+	Label oxygenSatLabel = null;
 	Group heartRateGroup = null;
 	Group oxygenSatGroup = null;
 
@@ -63,7 +63,7 @@ public class FileListener implements Runnable {
 		this.display = display;
 		this.shell = shell;
 		this.heartBPMLabel = heartBPMLabel;
-		this.oxySatLabel = oxySatLabel;
+		this.oxygenSatLabel = oxySatLabel;
 		this.oxygenSatGroup = oxygenSatGroup;
 		this.heartRateGroup = heartRateGroup;
 	}
@@ -98,7 +98,7 @@ public class FileListener implements Runnable {
 
 			@Override
 			public void run() {
-				oxySatLabel.setText("--");
+				oxygenSatLabel.setText("--");
 				heartBPMLabel.setText("--");
 
 				for (Control comp : oxygenSatGroup.getParent().getChildren()) {
@@ -214,7 +214,7 @@ public class FileListener implements Runnable {
 							}
 
 							Color color;
-							oxySatLabel.setText(oxygenSat + "");
+							oxygenSatLabel.setText(oxygenSat + "");
 							if (oxygenSat < 93) {
 
 								if (oxygenSat > 90) {
@@ -226,9 +226,10 @@ public class FileListener implements Runnable {
 							} else {
 								color = shell.getBackground();
 							}
-							oxygenSatGroup.setBackground(color);
+							oxygenSatLabel.getParent().setBackground(color);
 
-							for (Control comp : oxygenSatGroup.getChildren()) {
+							for (Control comp : oxygenSatLabel.getParent()
+									.getChildren()) {
 								comp.setBackground(color);
 							}
 
