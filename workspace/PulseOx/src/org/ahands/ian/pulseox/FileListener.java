@@ -162,7 +162,13 @@ public class FileListener implements Runnable {
 					waveY = deviceReader.read();
 					y = Y_MAX - waveY;
 					waveX = deviceReader.read();
-					heartRate = deviceReader.read();
+					final int tmp_heartRate = deviceReader.read();
+					if (tmp_heartRate < 40) {
+						heartRate = tmp_heartRate + 127;
+					} else {
+						heartRate = tmp_heartRate;
+					}
+
 					oxygenSat = deviceReader.read();
 
 					if (heartRate > 127 || oxygenSat > 127 || heartRate <= 0
@@ -188,10 +194,6 @@ public class FileListener implements Runnable {
 
 					oldHeartRate = heartRate;
 					oldOxygenSat = oxygenSat;
-
-					if (heartRate < 40) {
-						heartRate += 127;
-					}
 
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override

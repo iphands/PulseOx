@@ -133,7 +133,7 @@ public class LoggingListener implements Listener {
 		fillLayout.marginWidth = 8;
 
 		final Composite saveComp = new Composite(shell, SWT.NONE);
-		saveComp.setLayout(fillLayout);
+		// saveComp.setLayout(fillLayout);
 		saveComp.setLayoutData(gridData);
 
 		applyButton = new Button(saveComp, SWT.PUSH);

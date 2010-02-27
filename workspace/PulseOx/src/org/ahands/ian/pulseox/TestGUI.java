@@ -33,7 +33,7 @@ public class TestGUI {
 	static Logger logger = Logger.getLogger(TestGUI.class);
 
 	Label heartBPMLabel;
-	Label oxySatLabel;
+	Label oxygenSatLabel;
 	Group heartRateGroup;
 	Group oxygenSatGroup;
 
@@ -58,7 +58,7 @@ public class TestGUI {
 		shell.open();
 
 		fileListener = new FileListener("/dev/ttyUSB0", display, shell,
-				heartBPMLabel, oxySatLabel, oxygenSatGroup, heartRateGroup);
+				heartBPMLabel, oxygenSatLabel, oxygenSatGroup, heartRateGroup);
 
 		Thread guiUpdate = new Thread(fileListener);
 		guiUpdate.start();
@@ -107,7 +107,8 @@ public class TestGUI {
 
 		// FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
 
-		shell.setLayout(vertRowLayout);
+		// shell.setLayout(vertRowLayout);
+		shell.setLayout(new FillLayout(SWT.VERTICAL));
 
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
@@ -193,45 +194,43 @@ public class TestGUI {
 
 		oxygenSatGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.CENTER);
 		oxygenSatGroup.setText("Oxygen Saturation");
+		oxygenSatGroup.setLayout(new FillLayout(SWT.VERTICAL));
 
-		oxySatLabel = new Label(oxygenSatGroup, SWT.CENTER);
-		oxySatLabel.setFont(bigFont);
-		oxySatLabel.setText("--");
-		oxySatLabel.setSize(80, 40);
-		oxySatLabel.setBounds(20, 20, 80, 40);
+		Composite oxygenSatLabelsComp = new Composite(oxygenSatGroup, SWT.NONE);
+		oxygenSatLabelsComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		final Label percentLabel = new Label(oxygenSatGroup, SWT.CENTER);
+		oxygenSatLabel = new Label(oxygenSatLabelsComp, SWT.CENTER);
+		oxygenSatLabel.setFont(bigFont);
+		oxygenSatLabel.setText("--");
+
+		final Label percentLabel = new Label(oxygenSatLabelsComp, SWT.CENTER);
 		percentLabel.setText("%");
-		percentLabel.setBounds(oxySatLabel.getBounds().width + 4, (oxySatLabel
-				.getBounds().height + 20) - 15, 20, 15);
 
-		GraphCanvasGC oxygenSatGraph = new GraphCanvasGC(oxygenSatGroup) {
-
+		GraphCanvasGC oxygenSatGraph = new GraphCanvasGC(oxygenSatGroup, 200,
+				100) {
 			@Override
 			public int getYValue() {
-				// TODO Auto-generated method stub
 				return FileListener.getOxygenSat();
 			}
 		};
 
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
+		heartRateGroup.setLayout(new FillLayout(SWT.VERTICAL));
 
-		heartBPMLabel = new Label(heartRateGroup, SWT.CENTER);
+		Composite heartRateLabelsComp = new Composite(heartRateGroup, SWT.None);
+		heartRateLabelsComp.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+		heartBPMLabel = new Label(heartRateLabelsComp, SWT.CENTER);
 		heartBPMLabel.setFont(bigFont);
 		heartBPMLabel.setText("--");
-		heartBPMLabel.setBounds(20, 20, 80, 40);
 
-		final Label bpmLabel = new Label(heartRateGroup, SWT.CENTER);
+		final Label bpmLabel = new Label(heartRateLabelsComp, SWT.CENTER);
 		bpmLabel.setText("bpm");
-		bpmLabel.setBounds(heartBPMLabel.getBounds().width + 20, (heartBPMLabel
-				.getBounds().height + 20) - 15, 30, 15);
 
 		GraphCanvasGC heartRateGraph = new GraphCanvasGC(heartRateGroup) {
-
 			@Override
 			public int getYValue() {
-				// TODO Auto-generated method stub
 				return FileListener.getHeartRate();
 			}
 		};
@@ -242,16 +241,15 @@ public class TestGUI {
 		Group waveFormGroup = new Group(bottomComp, SWT.SHADOW_ETCHED_IN
 				| SWT.FILL);
 		waveFormGroup.setText("Wave Form");
-
+		waveFormGroup.setLayout(new FillLayout());
 		GraphCanvasGC waveFormGraph = new GraphCanvasGC(waveFormGroup) {
-
 			@Override
 			public int getYValue() {
 				return FileListener.getWaveYValue();
 			}
 		};
 
-		waveFormGraph.setSize(400, 200);
+		// waveFormGraph.setSize(400, 200);
 	}
 
 	public void center(Shell shell) {

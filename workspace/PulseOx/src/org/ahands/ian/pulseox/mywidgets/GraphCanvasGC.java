@@ -1,6 +1,5 @@
 package org.ahands.ian.pulseox.mywidgets;
 
-import org.ahands.ian.pulseox.FileListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -12,8 +11,8 @@ import org.eclipse.swt.widgets.Display;
 public abstract class GraphCanvasGC {
 
 	Composite parent;
-	int X_MAX = 200;
-	int Y_MAX = 127;
+	int x_max = 200;
+	int y_max = 127;
 	Display display = Display.getCurrent();
 	final Color BLACK = display.getSystemColor(SWT.COLOR_BLACK);
 	final Color GREEN = display.getSystemColor(SWT.COLOR_GREEN);
@@ -25,6 +24,14 @@ public abstract class GraphCanvasGC {
 
 	public GraphCanvasGC(Composite parent) {
 		this.parent = parent;
+		addWidget();
+		return;
+	}
+
+	public GraphCanvasGC(Composite parent, int width, int height) {
+		this.parent = parent;
+		this.x_max = width;
+		this.y_max = height;
 		addWidget();
 		return;
 	}
@@ -41,7 +48,7 @@ public abstract class GraphCanvasGC {
 
 	private void addWidget() {
 		canvas = new Canvas(parent, SWT.NONE);
-		canvas.setSize(X_MAX, Y_MAX);
+		canvas.setSize(x_max, y_max);
 		canvas.setBackground(new Color(Display.getCurrent(), 0, 0, 0));
 
 		final GC waveFormGc = new GC(canvas);
@@ -56,7 +63,7 @@ public abstract class GraphCanvasGC {
 
 				while (true) {
 
-					if (x >= X_MAX) {
+					if (x >= x_max) {
 						x = 0;
 					} else {
 						x++;
@@ -75,20 +82,20 @@ public abstract class GraphCanvasGC {
 
 							boolean overSized = false;
 
-							if (w > X_MAX) {
-								scaled_x = (int) (x * (w / X_MAX));
+							if (w > x_max) {
+								scaled_x = (int) (x * (w / x_max));
 								overSized = true;
 							}
 
-							if (h > Y_MAX) {
-								scaled_y = (int) (y * (h / Y_MAX));
+							if (h > y_max) {
+								scaled_y = (int) (y * (h / y_max));
 								overSized = true;
 							}
 
 							waveFormGc.setForeground(BLACK);
 
 							if (overSized) {
-								for (int i = 0, ix = ((int) ((w / X_MAX)) * 5); i < ix; i++) {
+								for (int i = 0, ix = ((int) ((w / x_max)) * 5); i < ix; i++) {
 									waveFormGc.drawLine(scaled_x + i, 0,
 											scaled_x + i, (int) h);
 								}
