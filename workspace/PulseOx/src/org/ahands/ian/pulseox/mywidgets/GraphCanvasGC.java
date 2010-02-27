@@ -75,10 +75,13 @@ public abstract class GraphCanvasGC {
 
 						@Override
 						public void run() {
+							// flip y
+							y = y_max - y;
+
 							float h = canvas.getBounds().height;
 							float w = canvas.getBounds().width;
 							int scaled_x = x;
-							int scaled_y = y_max - y;
+							int scaled_y = y;
 
 							boolean overSized = false;
 
