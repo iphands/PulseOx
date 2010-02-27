@@ -211,7 +211,7 @@ public class TestGUI {
 				return FileListener.getOxygenSat();
 			}
 		};
-		oxygenSatGraph.setAvgTicks(20);
+		oxygenSatGraph.setAvgTicks(50);
 
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
@@ -233,7 +233,7 @@ public class TestGUI {
 				return FileListener.getHeartRate();
 			}
 		};
-		heartRateGraph.setAvgTicks(10);
+		heartRateGraph.setAvgTicks(20);
 
 		final Composite bottomComp = new Composite(shell, SWT.NONE);
 		bottomComp.setLayout(new FillLayout());
