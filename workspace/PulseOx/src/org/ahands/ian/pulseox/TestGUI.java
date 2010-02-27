@@ -176,11 +176,6 @@ public class TestGUI {
 		// aboutMenuItem.setImage(Display.getCurrent().getSystemImage(SWT.ARROW));
 		aboutMenuItem.addListener(SWT.Selection, new AboutListener(shell));
 
-		MenuItem testMenuItem = new MenuItem(helpSubMenu, SWT.PUSH);
-		testMenuItem.setText("&test");
-		// aboutMenuItem.setImage(Display.getCurrent().getSystemImage(SWT.ARROW));
-		testMenuItem.addListener(SWT.Selection, new testGraph(shell));
-
 		Composite topComp = new Composite(shell, SWT.NONE);
 		topComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
