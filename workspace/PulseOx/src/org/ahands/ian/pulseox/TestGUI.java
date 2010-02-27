@@ -69,7 +69,10 @@ public class TestGUI {
 
 		Thread trayUpdater = new Thread(new TrayUpdater(display, shell,
 				fileListener, trayImage, trayItem, trayGc));
+
 		trayUpdater.start();
+
+		shell.pack();
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -208,7 +211,7 @@ public class TestGUI {
 				return FileListener.getOxygenSat();
 			}
 		};
-		oxygenSatGraph.setTimeout(500);
+		oxygenSatGraph.setAvgTicks(20);
 
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
@@ -230,7 +233,8 @@ public class TestGUI {
 				return FileListener.getHeartRate();
 			}
 		};
-		heartRateGraph.setTimeout(1000);
+		heartRateGraph.setAvgTicks(10);
+
 		final Composite bottomComp = new Composite(shell, SWT.NONE);
 		bottomComp.setLayout(new FillLayout());
 
@@ -244,8 +248,6 @@ public class TestGUI {
 				return FileListener.getWaveYValue();
 			}
 		};
-
-		// waveFormGraph.setSize(400, 200);
 	}
 
 	public void center(Shell shell) {

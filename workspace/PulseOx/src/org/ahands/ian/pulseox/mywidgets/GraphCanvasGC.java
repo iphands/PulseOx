@@ -1,5 +1,8 @@
 package org.ahands.ian.pulseox.mywidgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -18,6 +21,7 @@ public abstract class GraphCanvasGC {
 	final Color GREEN = display.getSystemColor(SWT.COLOR_GREEN);
 	final Color RED = display.getSystemColor(SWT.COLOR_RED);
 	int timeout = 22;
+	int avgTicks = 0;
 	Canvas canvas;
 
 	public abstract int getYValue();
@@ -30,6 +34,11 @@ public abstract class GraphCanvasGC {
 
 	public synchronized void setTimeout(int timeout) {
 		this.timeout = timeout;
+		return;
+	}
+
+	public synchronized void setAvgTicks(int avgTicks) {
+		this.avgTicks = avgTicks;
 		return;
 	}
 
@@ -66,15 +75,46 @@ public abstract class GraphCanvasGC {
 			@Override
 			public void run() {
 
+				List<Integer> yDataList = new ArrayList<Integer>();
+
 				while (true) {
+
+					try {
+						Thread.sleep(timeout);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+					y = getYValue();
+
+					if (avgTicks > 0) {
+						yDataList.add(y);
+
+						if (yDataList.size() > avgTicks) {
+
+							while (yDataList.size() > avgTicks) {
+								yDataList.remove(0);
+							}
+
+							for (int tmp_y : yDataList) {
+								// System.err.println(tmp_y);
+								y += tmp_y;
+							}
+
+							// System.err.println(y + " - " + avgTicks);
+							y = y / (avgTicks + 1);
+							// System.err.println("ans: " + y);
+							yDataList.clear();
+						} else {
+							continue;
+						}
+					}
 
 					if (x >= x_max) {
 						x = 0;
 					} else {
 						x++;
 					}
-
-					y = getYValue();
 
 					Display.getDefault().asyncExec(new Runnable() {
 
@@ -101,7 +141,6 @@ public abstract class GraphCanvasGC {
 							}
 
 							waveFormGc.setForeground(BLACK);
-
 							if (overSized) {
 								for (int i = 0, ix = ((int) ((w / x_max)) * 5); i < ix; i++) {
 									waveFormGc.drawLine(scaled_x + i, 0,
@@ -120,16 +159,11 @@ public abstract class GraphCanvasGC {
 								waveFormGc.drawLine(scaled_x, scaled_y, old_x,
 										old_y);
 							}
+
 							old_x = scaled_x;
 							old_y = scaled_y;
 						}
 					});
-
-					try {
-						Thread.sleep(timeout);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
 				}
 			}
 		}

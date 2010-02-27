@@ -94,8 +94,8 @@ public class FileListener implements Runnable {
 	}
 
 	public synchronized void blankLabels() {
-		Display.getDefault().asyncExec(new Runnable() {
 
+		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				oxygenSatLabel.setText("--");
@@ -147,11 +147,11 @@ public class FileListener implements Runnable {
 		while (!shell.isDisposed()) {
 			try {
 				if (counter >= 400) {
-					deviceReader.close();
-					deviceReader = new BufferedReader(new FileReader(new File(
-							DEVICE)));
-					counter = 0;
 					logger.debug("flushing buffer");
+					while (deviceReader.ready()) {
+						deviceReader.read();
+					}
+					counter = 0;
 				} else {
 					counter++;
 				}
@@ -161,6 +161,7 @@ public class FileListener implements Runnable {
 					old_y = y;
 					waveY = deviceReader.read();
 					y = Y_MAX - waveY;
+					y = waveY;
 					waveX = deviceReader.read();
 					final int tmp_heartRate = deviceReader.read();
 					if (tmp_heartRate < 40) {
@@ -239,6 +240,11 @@ public class FileListener implements Runnable {
 					Thread.sleep(20);
 
 				} else {
+
+					deviceReader.close();
+					deviceReader = new BufferedReader(new FileReader(new File(
+							DEVICE)));
+
 					blankLabels();
 					logger.debug("waiting for control character (" + controlInt
 							+ ")");
