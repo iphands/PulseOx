@@ -72,8 +72,6 @@ public class LoggingListener implements Listener {
 
 	@Override
 	public void handleEvent(Event arg0) {
-
-		// final Display display = Display.getCurrent();
 		shell = new Shell(parent, SWT.RESIZE | SWT.TITLE | SWT.CLOSE);
 		shell.setText("Logging...");
 
@@ -133,7 +131,7 @@ public class LoggingListener implements Listener {
 		fillLayout.marginWidth = 8;
 
 		final Composite saveComp = new Composite(shell, SWT.NONE);
-		// saveComp.setLayout(fillLayout);
+		saveComp.setLayout(fillLayout);
 		saveComp.setLayoutData(gridData);
 
 		applyButton = new Button(saveComp, SWT.PUSH);
