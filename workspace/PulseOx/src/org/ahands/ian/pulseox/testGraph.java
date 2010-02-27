@@ -3,6 +3,7 @@ package org.ahands.ian.pulseox;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
@@ -32,12 +33,12 @@ public class testGraph implements Listener {
 		shell.pack();
 		shell.open();
 
-		final FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
-		fillLayout.spacing = 8;
-		fillLayout.marginHeight = 8;
-		fillLayout.marginWidth = 8;
+		// final FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+		// fillLayout.spacing = 8;
+		// fillLayout.marginHeight = 8;
+		// fillLayout.marginWidth = 8;
 
-		shell.setLayout(fillLayout);
+		shell.setLayout(new FillLayout());
 
 		final Canvas canvas = new Canvas(shell, SWT.NONE);
 		canvas.setBackground(new Color(Display.getCurrent(), 0, 0, 0));
@@ -48,47 +49,61 @@ public class testGraph implements Listener {
 		class UpdateGC implements Runnable {
 
 			int x, y, old_x, old_y = 0;
+			int[] coord = FileListener.getPoint();
 
 			@Override
 			public void run() {
 
 				while (true) {
 
-					x = FileListener.x;
-					y = FileListener.y;
+					coord = FileListener.getPoint();
+					x = coord[0];
+					y = coord[1];
+
 					Display.getDefault().asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
 							float h = canvas.getBounds().height;
 							float w = canvas.getBounds().width;
+							boolean overSized = false;
 
-							if (w > XSCALE)
+							if (w > XSCALE) {
 								x = (int) (x * (w / XSCALE));
+								overSized = true;
+							}
 
-							if (h > YSCALE)
+							if (h > YSCALE) {
 								y = (int) (y * (h / YSCALE));
+								overSized = true;
+							}
 
-							if (x > old_x) {
-								waveFormGc.setForeground(BLACK);
-								for (int i = 0, ix = (int) ((w / XSCALE) + 1); i < ix; i++) {
+							if (x < old_x) {
+								System.err.println(x + ", " + y);
+								return;
+							}
+
+							waveFormGc.setForeground(BLACK);
+
+							if (overSized) {
+								for (int i = 0, ix = ((int) ((w / XSCALE)) * 5); i < ix; i++) {
 									waveFormGc.drawLine(x + i, 0, x + i,
 											(int) h);
 								}
-								waveFormGc.setForeground(GREEN);
-
-								waveFormGc.drawLine(x, y, old_x, old_y);
 							} else {
-								System.out.println(w + "," + h);
-								System.out.println("(" + old_x + ", " + old_y
-										+ ")");
+								waveFormGc.drawLine(x + 1, 0, x + 1, (int) h);
 							}
 
+							waveFormGc.setForeground(GREEN);
+
+							if (x > old_x && x < w) {
+								waveFormGc.drawLine(x, y, old_x, old_y);
+							}
 						}
 					});
 
 					try {
-						Thread.sleep(20);
+						Thread.sleep(22);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
