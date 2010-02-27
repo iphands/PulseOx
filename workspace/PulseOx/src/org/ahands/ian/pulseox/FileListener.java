@@ -36,8 +36,8 @@ public class FileListener implements Runnable {
 	int controlInt = 134;
 	int waveY = 0;
 	int waveX;
-	int heartRate;
-	int oxygenSat;
+	static int heartRate;
+	static int oxygenSat;
 	Canvas canvas;
 	// GC waveFormGc;
 
@@ -81,12 +81,16 @@ public class FileListener implements Runnable {
 		return;
 	}
 
-	public synchronized static int[] getPoint() {
-		return new int[] { x, y };
+	public synchronized static int getWaveYValue() {
+		return y;
 	}
 
-	public synchronized int getOxygenSat() {
+	public synchronized static int getOxygenSat() {
 		return oxygenSat;
+	}
+
+	public synchronized static int getHeartRate() {
+		return heartRate;
 	}
 
 	public synchronized void blankLabels() {
@@ -195,25 +199,7 @@ public class FileListener implements Runnable {
 
 							if (x >= X_MAX) {
 								x = 0;
-								// waveFormGc.setForeground(BLACK);
-								// waveFormGc.drawLine(0, 0, 0, Y_MAX);
-								// waveFormGc.drawLine(1, 0, 1, Y_MAX);
-								// waveFormGc.setForeground(GREEN);
 							} else {
-
-								if (x > 0) {
-									// waveFormGc.setForeground(BLACK);
-									// waveFormGc.drawLine(x + 1, 0, x + 1,
-									// Y_MAX);
-									// waveFormGc.setForeground(GREEN);
-								}
-
-								// waveFormGc.setForeground(GREEN);
-								// waveFormGc.drawLine(x, y, x - 1, old_y);
-								//
-								// waveFormGc.setForeground(RED);
-								// waveFormGc.drawPoint(x, y);
-
 								x++;
 							}
 

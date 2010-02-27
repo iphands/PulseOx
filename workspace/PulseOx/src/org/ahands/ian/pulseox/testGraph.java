@@ -49,14 +49,14 @@ public class testGraph implements Listener {
 		class UpdateGC implements Runnable {
 
 			int x, y, old_x, old_y = 0;
-			int[] coord = FileListener.getPoint();
+			int[] coord = FileListener.getWaveYValue();
 
 			@Override
 			public void run() {
 
 				while (true) {
 
-					coord = FileListener.getPoint();
+					coord = FileListener.getWaveYValue();
 					x = coord[0];
 					y = coord[1];
 

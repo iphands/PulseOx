@@ -1,5 +1,6 @@
 package org.ahands.ian.pulseox;
 
+import org.ahands.ian.pulseox.mywidgets.GraphCanvasGC;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -204,6 +205,15 @@ public class TestGUI {
 		percentLabel.setBounds(oxySatLabel.getBounds().width + 4, (oxySatLabel
 				.getBounds().height + 20) - 15, 20, 15);
 
+		GraphCanvasGC oxygenSatGraph = new GraphCanvasGC(oxygenSatGroup) {
+
+			@Override
+			public int getYValue() {
+				// TODO Auto-generated method stub
+				return FileListener.getOxygenSat();
+			}
+		};
+
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
 
@@ -217,6 +227,15 @@ public class TestGUI {
 		bpmLabel.setBounds(heartBPMLabel.getBounds().width + 20, (heartBPMLabel
 				.getBounds().height + 20) - 15, 30, 15);
 
+		GraphCanvasGC heartRateGraph = new GraphCanvasGC(heartRateGroup) {
+
+			@Override
+			public int getYValue() {
+				// TODO Auto-generated method stub
+				return FileListener.getHeartRate();
+			}
+		};
+
 		final Composite bottomComp = new Composite(shell, SWT.NONE);
 		bottomComp.setLayout(new FillLayout());
 
@@ -224,28 +243,15 @@ public class TestGUI {
 				| SWT.FILL);
 		waveFormGroup.setText("Wave Form");
 
-		canvas = new Canvas(waveFormGroup, SWT.NONE);
-		canvas.setSize(200, 128);
-		canvas.setLocation(31, 30);
-		canvas.setBackground(new Color(Display.getCurrent(), 0, 0, 0));
+		GraphCanvasGC waveFormGraph = new GraphCanvasGC(waveFormGroup) {
 
-		canvas.addPaintListener(new PaintListener() {
 			@Override
-			public void paintControl(PaintEvent pEvent) {
-
-				waveFormGc = new GC(canvas);
-				waveFormGc.setForeground(pEvent.display
-						.getSystemColor(SWT.COLOR_GREEN));
-
-				fileListener.setGC(waveFormGc, canvas, canvas.getClientArea());
-
-				final Rectangle canvasRect = canvas.getBounds();
-				final Rectangle bottomCompRect = bottomComp.getBounds();
-				canvas.setLocation(((bottomCompRect.width / 2))
-						- ((canvasRect.width / 2)), 30);
-
+			public int getYValue() {
+				return FileListener.getWaveYValue();
 			}
-		});
+		};
+
+		waveFormGraph.setSize(400, 200);
 	}
 
 	public void center(Shell shell) {
