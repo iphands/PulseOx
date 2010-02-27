@@ -17,7 +17,7 @@ public abstract class GraphCanvasGC {
 	final Color BLACK = display.getSystemColor(SWT.COLOR_BLACK);
 	final Color GREEN = display.getSystemColor(SWT.COLOR_GREEN);
 	final Color RED = display.getSystemColor(SWT.COLOR_RED);
-	int timeout = 25;
+	int timeout = 22;
 	Canvas canvas;
 
 	public abstract int getYValue();
@@ -25,6 +25,11 @@ public abstract class GraphCanvasGC {
 	public GraphCanvasGC(Composite parent) {
 		this.parent = parent;
 		addWidget();
+		return;
+	}
+
+	public synchronized void setTimeout(int timeout) {
+		this.timeout = timeout;
 		return;
 	}
 

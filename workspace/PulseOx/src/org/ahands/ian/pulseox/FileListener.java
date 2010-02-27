@@ -236,7 +236,7 @@ public class FileListener implements Runnable {
 						}
 					});
 
-					Thread.sleep(30);
+					Thread.sleep(20);
 
 				} else {
 					blankLabels();

@@ -208,6 +208,7 @@ public class TestGUI {
 				return FileListener.getOxygenSat();
 			}
 		};
+		oxygenSatGraph.setTimeout(500);
 
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
@@ -229,7 +230,7 @@ public class TestGUI {
 				return FileListener.getHeartRate();
 			}
 		};
-
+		heartRateGraph.setTimeout(1000);
 		final Composite bottomComp = new Composite(shell, SWT.NONE);
 		bottomComp.setLayout(new FillLayout());
 
