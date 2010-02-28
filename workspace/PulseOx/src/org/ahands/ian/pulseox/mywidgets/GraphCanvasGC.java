@@ -23,17 +23,24 @@ public abstract class GraphCanvasGC {
 	final Color GREEN = display.getSystemColor(SWT.COLOR_GREEN);
 	final Color RED = display.getSystemColor(SWT.COLOR_RED);
 	final Color ORANGE = new Color(display, 255, 150, 0);
-	final Color BLUE = display.getSystemColor(SWT.COLOR_WHITE);
+	final Color WHITE = display.getSystemColor(SWT.COLOR_WHITE);
 	int timeout = 22;
 	int avgTicks = 0;
 	Canvas canvas;
 	boolean doMarker = false;
 
+	float low_percentage = 0;
+	float med_percentage = 0;
+
 	public abstract int getYValue();
 
+	public void setPercentages(float low_percentage, float med_percentage) {
+		this.low_percentage = low_percentage;
+		this.med_percentage = med_percentage;
+	}
+
 	public void setYMin(int y_min) {
-		// this.y_min = y_min;
-		// y_max -= ORIG_Y_MAX - y_min;
+		y_max = ORIG_Y_MAX - y_min;
 	}
 
 	public void setDoMarker(boolean doMarker) {
@@ -85,7 +92,7 @@ public abstract class GraphCanvasGC {
 
 		class UpdateGC implements Runnable {
 
-			int x, y, old_x, old_y = 0;
+			int x, y, old_x_point, old_y_point = 0;
 
 			@Override
 			public void run() {
@@ -135,77 +142,50 @@ public abstract class GraphCanvasGC {
 						@Override
 						public void run() {
 
-							System.out.println("ymax: " + y_max + ", "
-									+ (int) (((float) y / y_max) * 100));
+							final float y_percent = ((float) (y - (ORIG_Y_MAX - y_max)) / y_max);
+							final float x_percent = ((float) x / x_max);
 
-							final int ORIG_Y = y;
+							final float canvas_height = canvas.getBounds().height;
+							final float canvas_width = canvas.getBounds().width;
 
-							// flip y
-							y = y_max - y;
+							final int y_point = ((int) canvas_height)
+									- ((int) (canvas_height * y_percent));
+							final int x_point = (int) (canvas_width * x_percent);
 
-							float h = canvas.getBounds().height;
-							float w = canvas.getBounds().width;
-							int scaled_x = x;
-							int scaled_y = y;
-
-							boolean overSized = false;
-
-							if (w > x_max) {
-								scaled_x = (int) (x * (w / x_max));
-								overSized = true;
-							}
-
-							if (h > y_max) {
-								scaled_y = (int) (y * (h / y_max));
-								overSized = true;
-							}
+							final int scaled_unit = (int) ((canvas_width / x_max) + 1);
 
 							waveFormGc.setForeground(BLACK);
-							if (overSized) {
-								for (int i = 0, ix = ((int) ((w / x_max)) * 5) + 10; i < ix; i++) {
-									waveFormGc.drawLine(scaled_x + i, 0,
-											scaled_x + i, (int) h);
-								}
-							} else {
-								waveFormGc.drawLine(scaled_x, 0, scaled_x,
-										(int) h);
-								waveFormGc.drawLine(scaled_x + 1, 0,
-										scaled_x + 1, (int) h);
+							for (int i = 0; i < scaled_unit; i++) {
+								waveFormGc.drawLine(x_point + i, 0,
+										x_point + i, (int) canvas_height);
 							}
 
-							if (scaled_x > old_x && scaled_x < w) {
+							if (x_point > old_x_point) {
 
-								waveFormGc
-										.setLineWidth((int) ((h / y_max) * 2));
-
-								if (doMarker) {
-									waveFormGc.setBackground(BLACK);
-									waveFormGc.fillRoundRectangle(old_x,
-											old_y - 5, 10, 10, 10, 10);
-									waveFormGc.setBackground(BLUE);
-									waveFormGc.fillRoundRectangle(scaled_x,
-											scaled_y - 5, 10, 10, 10, 10);
-									waveFormGc.setBackground(BLACK);
-								}
-
-								if ((ORIG_Y >= 90) && (ORIG_Y < 93)) {
+								if ((y_percent >= low_percentage)
+										&& (y_percent < med_percentage)) {
 									waveFormGc.setForeground(ORANGE);
-								} else if (ORIG_Y < 90) {
+								} else if (y_percent < low_percentage) {
 									waveFormGc.setForeground(RED);
 								} else {
 									waveFormGc.setForeground(GREEN);
 								}
 
-								// if (y_min > 0) {
-								// System.out.println("y: " + scaled_y + ", "
-								// + y + " -- " + y_max);
-								// }
+								waveFormGc.setLineWidth(scaled_unit);
+								waveFormGc.drawLine(x_point, y_point,
+										old_x_point, old_y_point);
 
-								waveFormGc.drawLine(scaled_x, scaled_y, old_x,
-										old_y);
+								if (doMarker) {
+									waveFormGc.setBackground(WHITE);
+									waveFormGc.fillRoundRectangle(x_point + 1,
+											y_point - 5, 10, 10, 10, 10);
+
+									waveFormGc.setBackground(BLACK);
+								}
 							}
-							old_x = scaled_x;
-							old_y = scaled_y;
+
+							old_x_point = x_point;
+							old_y_point = y_point;
 						}
 					});
 				}
