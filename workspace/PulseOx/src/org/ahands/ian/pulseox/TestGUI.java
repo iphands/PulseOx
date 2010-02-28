@@ -231,9 +231,10 @@ public class TestGUI {
 				return FileListener.getOxygenSat();
 			}
 		};
-		//oxygenSatGraph.setAvgTicks(50);
-		// oxygenSatGraph.setYMin(70);
+		oxygenSatGraph.setAvgTicks(50);
+		oxygenSatGraph.setYMin(70);
 		oxygenSatGraph.setDoMarker(true);
+		oxygenSatGraph.setPercentages((float) .90, (float) .93);
 
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
@@ -256,6 +257,7 @@ public class TestGUI {
 			}
 		};
 		heartRateGraph.setAvgTicks(20);
+		heartRateGraph.setYMin(40);
 		heartRateGraph.setDoMarker(true);
 
 		final Composite bottomComp = new Composite(shell, SWT.NONE);
