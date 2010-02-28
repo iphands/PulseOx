@@ -15,16 +15,30 @@ public abstract class GraphCanvasGC {
 
 	Composite parent;
 	int x_max = 200;
-	int y_max = 127;
+	// int y_min = 0;
+	int ORIG_Y_MAX = 127;
+	int y_max = ORIG_Y_MAX;
 	Display display = Display.getCurrent();
 	final Color BLACK = display.getSystemColor(SWT.COLOR_BLACK);
 	final Color GREEN = display.getSystemColor(SWT.COLOR_GREEN);
 	final Color RED = display.getSystemColor(SWT.COLOR_RED);
+	final Color ORANGE = new Color(display, 255, 150, 0);
+	final Color BLUE = display.getSystemColor(SWT.COLOR_WHITE);
 	int timeout = 22;
 	int avgTicks = 0;
 	Canvas canvas;
+	boolean doMarker = false;
 
 	public abstract int getYValue();
+
+	public void setYMin(int y_min) {
+		// this.y_min = y_min;
+		// y_max -= ORIG_Y_MAX - y_min;
+	}
+
+	public void setDoMarker(boolean doMarker) {
+		this.doMarker = doMarker;
+	}
 
 	public GraphCanvasGC(Composite parent) {
 		this.parent = parent;
@@ -46,6 +60,7 @@ public abstract class GraphCanvasGC {
 		this.parent = parent;
 		this.x_max = width;
 		this.y_max = height;
+		this.ORIG_Y_MAX = height;
 		addWidget();
 		return;
 	}
@@ -117,9 +132,14 @@ public abstract class GraphCanvasGC {
 					}
 
 					Display.getDefault().asyncExec(new Runnable() {
-
 						@Override
 						public void run() {
+
+							System.out.println("ymax: " + y_max + ", "
+									+ (int) (((float) y / y_max) * 100));
+
+							final int ORIG_Y = y;
+
 							// flip y
 							y = y_max - y;
 
@@ -142,7 +162,7 @@ public abstract class GraphCanvasGC {
 
 							waveFormGc.setForeground(BLACK);
 							if (overSized) {
-								for (int i = 0, ix = ((int) ((w / x_max)) * 5); i < ix; i++) {
+								for (int i = 0, ix = ((int) ((w / x_max)) * 5) + 10; i < ix; i++) {
 									waveFormGc.drawLine(scaled_x + i, 0,
 											scaled_x + i, (int) h);
 								}
@@ -153,15 +173,37 @@ public abstract class GraphCanvasGC {
 										scaled_x + 1, (int) h);
 							}
 
-							waveFormGc.setForeground(GREEN);
-
 							if (scaled_x > old_x && scaled_x < w) {
-								waveFormGc.setLineWidth((int) ((h / y_max) * 2));
+
+								waveFormGc
+										.setLineWidth((int) ((h / y_max) * 2));
+
+								if (doMarker) {
+									waveFormGc.setBackground(BLACK);
+									waveFormGc.fillRoundRectangle(old_x,
+											old_y - 5, 10, 10, 10, 10);
+									waveFormGc.setBackground(BLUE);
+									waveFormGc.fillRoundRectangle(scaled_x,
+											scaled_y - 5, 10, 10, 10, 10);
+									waveFormGc.setBackground(BLACK);
+								}
+
+								if ((ORIG_Y >= 90) && (ORIG_Y < 93)) {
+									waveFormGc.setForeground(ORANGE);
+								} else if (ORIG_Y < 90) {
+									waveFormGc.setForeground(RED);
+								} else {
+									waveFormGc.setForeground(GREEN);
+								}
+
+								// if (y_min > 0) {
+								// System.out.println("y: " + scaled_y + ", "
+								// + y + " -- " + y_max);
+								// }
 
 								waveFormGc.drawLine(scaled_x, scaled_y, old_x,
 										old_y);
 							}
-
 							old_x = scaled_x;
 							old_y = scaled_y;
 						}
