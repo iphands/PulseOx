@@ -6,6 +6,8 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Path;
+import org.eclipse.swt.graphics.PathData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -29,12 +31,12 @@ public abstract class GraphCanvasGC {
 	Canvas canvas;
 	boolean doMarker = false;
 
-	float low_percentage = 0;
-	float med_percentage = 0;
+	int low_percentage = 0;
+	int med_percentage = 0;
 
 	public abstract int getYValue();
 
-	public void setPercentages(float low_percentage, float med_percentage) {
+	public void setErrorWarning(int low_percentage, int med_percentage) {
 		this.low_percentage = low_percentage;
 		this.med_percentage = med_percentage;
 	}
@@ -97,7 +99,8 @@ public abstract class GraphCanvasGC {
 			@Override
 			public void run() {
 
-				List<Integer> yDataList = new ArrayList<Integer>();
+				List<Integer> yAverageDataList = new ArrayList<Integer>();
+				final List<Point> dataPointList = new ArrayList<Point>();
 
 				while (true) {
 
@@ -110,15 +113,15 @@ public abstract class GraphCanvasGC {
 					y = getYValue();
 
 					if (avgTicks > 0) {
-						yDataList.add(y);
+						yAverageDataList.add(y);
 
-						if (yDataList.size() > avgTicks) {
+						if (yAverageDataList.size() > avgTicks) {
 
-							while (yDataList.size() > avgTicks) {
-								yDataList.remove(0);
+							while (yAverageDataList.size() > avgTicks) {
+								yAverageDataList.remove(0);
 							}
 
-							for (int tmp_y : yDataList) {
+							for (int tmp_y : yAverageDataList) {
 								// System.err.println(tmp_y);
 								y += tmp_y;
 							}
@@ -126,7 +129,7 @@ public abstract class GraphCanvasGC {
 							// System.err.println(y + " - " + avgTicks);
 							y = y / (avgTicks + 1);
 							// System.err.println("ans: " + y);
-							yDataList.clear();
+							yAverageDataList.clear();
 						} else {
 							continue;
 						}
@@ -155,17 +158,17 @@ public abstract class GraphCanvasGC {
 							final int scaled_unit = (int) ((canvas_width / x_max) + 1);
 
 							waveFormGc.setForeground(BLACK);
-							for (int i = 0; i < scaled_unit; i++) {
+							for (int i = 0, ix = scaled_unit + 11; i < ix; i++) {
 								waveFormGc.drawLine(x_point + i, 0,
 										x_point + i, (int) canvas_height);
 							}
 
 							if (x_point > old_x_point) {
 
-								if ((y_percent >= low_percentage)
-										&& (y_percent < med_percentage)) {
+								if ((y >= low_percentage)
+										&& (y < med_percentage)) {
 									waveFormGc.setForeground(ORANGE);
-								} else if (y_percent < low_percentage) {
+								} else if (y < low_percentage) {
 									waveFormGc.setForeground(RED);
 								} else {
 									waveFormGc.setForeground(GREEN);
@@ -174,6 +177,18 @@ public abstract class GraphCanvasGC {
 								waveFormGc.setLineWidth(scaled_unit);
 								waveFormGc.drawLine(x_point, y_point,
 										old_x_point, old_y_point);
+
+								// dataPointList.add(new Point(x_point,
+								// y_point));
+								// while (dataPointList.size() > x_max) {
+								// dataPointList.remove(0);
+								// }
+								//								
+								// Path dataPath = new Path(display);
+								// dataPath.
+								// for (Point point : dataPointList) {
+								//									
+								// }
 
 								if (doMarker) {
 									waveFormGc.setBackground(WHITE);
