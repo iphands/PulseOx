@@ -234,7 +234,7 @@ public class TestGUI {
 		oxygenSatGraph.setAvgTicks(50);
 		oxygenSatGraph.setYMin(70);
 		oxygenSatGraph.setDoMarker(true);
-		oxygenSatGraph.setPercentages((float) .90, (float) .93);
+		oxygenSatGraph.setErrorWarning(90, 93);
 
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
