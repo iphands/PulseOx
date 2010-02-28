@@ -6,6 +6,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -43,12 +45,13 @@ public class TestGUI {
 	Image trayImage;
 	TrayItem trayItem;
 	FileListener fileListener;
+	String[] deviceArray;
 
 	public TestGUI(Display display) {
 
 		Shell shell = new Shell(display, SWT.SHELL_TRIM);
 		shell.setText("PulseOx");
-		shell.setSize(278, 346);
+		// shell.setSize(278, 346);
 
 		center(shell);
 		initUI(shell);
@@ -72,7 +75,7 @@ public class TestGUI {
 
 		trayUpdater.start();
 
-		shell.pack();
+		shell.setSize(400, 400);
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -94,6 +97,42 @@ public class TestGUI {
 			// trayItem.setToolTipText("99");
 			trayItem.setImage(trayImage);
 		}
+	}
+
+	public void buildDeviceMenu(final Menu deviceSubMenu) {
+		deviceArray = DeviceChooser.getDevList();
+		for (final String device : deviceArray) {
+
+			MenuItem deviceMenuItem = new MenuItem(deviceSubMenu, SWT.PUSH);
+			deviceMenuItem.setText(device);
+			deviceMenuItem.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event arg0) {
+					fileListener.setDevice(device);
+				}
+			});
+
+		}
+
+		MenuItem seperator = new MenuItem(deviceSubMenu, SWT.SEPARATOR);
+
+		MenuItem deviceMenuItem = new MenuItem(deviceSubMenu, SWT.PUSH);
+		deviceMenuItem.setText("&Refresh");
+
+		// deviceMenuItem.setImage(Display.getCurrent().getSystemImage(
+		// SWT.ICON_SEARCH));
+
+		deviceMenuItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				for (MenuItem menuItem : deviceSubMenu.getItems()) {
+					menuItem.dispose();
+				}
+				buildDeviceMenu(deviceSubMenu);
+			}
+		});
+
+		return;
 	}
 
 	public void initUI(final Shell shell) {
@@ -139,34 +178,15 @@ public class TestGUI {
 			}
 		});
 
-		MenuItem deviceItem = new MenuItem(menu, SWT.CASCADE);
+		final MenuItem deviceItem = new MenuItem(menu, SWT.CASCADE);
 		deviceItem.setText("&Device");
 
-		Menu deviceSubMenu = new Menu(shell, SWT.DROP_DOWN);
+		final Menu deviceSubMenu = new Menu(shell, SWT.DROP_DOWN);
 		deviceItem.setMenu(deviceSubMenu);
 
-		String[] deviceArray = DeviceChooser.getDevList();
+		deviceArray = DeviceChooser.getDevList();
 
-		// deviceItem.addListener(SWT.PUSH, new Listener() {
-		//
-		// @Override
-		// public void handleEvent(Event arg0) {
-		// deviceArray = DeviceChooser.getDevList();
-		//
-		// }
-		// });
-
-		for (final String device : deviceArray) {
-			MenuItem deviceMenuItem = new MenuItem(deviceSubMenu, SWT.PUSH);
-			deviceMenuItem.setText(device);
-			deviceMenuItem.addListener(SWT.Selection, new Listener() {
-
-				@Override
-				public void handleEvent(Event arg0) {
-					fileListener.setDevice(device);
-				}
-			});
-		}
+		buildDeviceMenu(deviceSubMenu);
 
 		MenuItem helpItem = new MenuItem(menu, SWT.CASCADE);
 		helpItem.setText("&Help");
@@ -211,7 +231,9 @@ public class TestGUI {
 				return FileListener.getOxygenSat();
 			}
 		};
-		oxygenSatGraph.setAvgTicks(50);
+		//oxygenSatGraph.setAvgTicks(50);
+		// oxygenSatGraph.setYMin(70);
+		oxygenSatGraph.setDoMarker(true);
 
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
@@ -234,6 +256,7 @@ public class TestGUI {
 			}
 		};
 		heartRateGraph.setAvgTicks(20);
+		heartRateGraph.setDoMarker(true);
 
 		final Composite bottomComp = new Composite(shell, SWT.NONE);
 		bottomComp.setLayout(new FillLayout());
