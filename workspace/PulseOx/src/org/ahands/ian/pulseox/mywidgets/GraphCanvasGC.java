@@ -6,9 +6,9 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Path;
-import org.eclipse.swt.graphics.PathData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -209,5 +209,14 @@ public abstract class GraphCanvasGC {
 
 		Thread thread = new Thread(new UpdateGC());
 		thread.start();
+	}
+
+	public void setLayoutData(GridData gridData) {
+		this.canvas.setLayoutData(gridData);
+		return;		
+	}
+
+	public void setLayout(FillLayout fillLayout) {
+		this.canvas.setLayout(fillLayout);
 	}
 }
