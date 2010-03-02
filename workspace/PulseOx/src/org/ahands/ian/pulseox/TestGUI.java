@@ -4,11 +4,6 @@ import org.ahands.ian.pulseox.mywidgets.GraphCanvasGC;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
@@ -16,7 +11,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -57,7 +53,7 @@ public class TestGUI {
 		initUI(shell);
 		initTray(display);
 
-		shell.pack();
+		// shell.pack();
 		shell.open();
 
 		fileListener = new FileListener("/dev/ttyUSB0", display, shell,
@@ -136,20 +132,6 @@ public class TestGUI {
 	}
 
 	public void initUI(final Shell shell) {
-
-		RowLayout vertRowLayout = new RowLayout(SWT.VERTICAL);
-		vertRowLayout.marginTop = 10;
-		vertRowLayout.marginBottom = 10;
-		vertRowLayout.marginLeft = 5;
-		vertRowLayout.marginRight = 5;
-		vertRowLayout.spacing = 10;
-		vertRowLayout.wrap = true;
-		vertRowLayout.fill = true;
-		vertRowLayout.justify = true;
-
-		// FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
-
-		// shell.setLayout(vertRowLayout);
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 
 		Menu menu = new Menu(shell, SWT.BAR);
@@ -212,10 +194,14 @@ public class TestGUI {
 
 		oxygenSatGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.CENTER);
 		oxygenSatGroup.setText("Oxygen Saturation");
-		oxygenSatGroup.setLayout(new FillLayout(SWT.VERTICAL));
+		oxygenSatGroup.setLayout(new GridLayout());
+		oxygenSatGroup.setLayoutData(new GridData(GridData.FILL,
+				GridData.CENTER, true, false));
 
 		Composite oxygenSatLabelsComp = new Composite(oxygenSatGroup, SWT.NONE);
 		oxygenSatLabelsComp.setLayout(new FillLayout(SWT.HORIZONTAL));
+		oxygenSatLabelsComp.setLayoutData(new GridData(GridData.FILL,
+				GridData.CENTER, false, false));
 
 		oxygenSatLabel = new Label(oxygenSatLabelsComp, SWT.CENTER);
 		oxygenSatLabel.setFont(bigFont);
@@ -235,13 +221,19 @@ public class TestGUI {
 		oxygenSatGraph.setYMin(70);
 		oxygenSatGraph.setDoMarker(true);
 		oxygenSatGraph.setErrorWarning(90, 93);
+		oxygenSatGraph.setLayoutData(new GridData(GridData.FILL, GridData.FILL,
+				true, true));
 
 		heartRateGroup = new Group(topComp, SWT.SHADOW_ETCHED_IN | SWT.FILL);
 		heartRateGroup.setText("Heart Rate");
-		heartRateGroup.setLayout(new FillLayout(SWT.VERTICAL));
+		heartRateGroup.setLayout(new GridLayout());
+		heartRateGroup.setLayoutData(new GridData(GridData.FILL,
+				GridData.CENTER, true, false));
 
 		Composite heartRateLabelsComp = new Composite(heartRateGroup, SWT.None);
 		heartRateLabelsComp.setLayout(new FillLayout(SWT.HORIZONTAL));
+		heartRateLabelsComp.setLayoutData(new GridData(GridData.FILL,
+				GridData.CENTER, false, false));
 
 		heartBPMLabel = new Label(heartRateLabelsComp, SWT.CENTER);
 		heartBPMLabel.setFont(bigFont);
@@ -259,6 +251,8 @@ public class TestGUI {
 		heartRateGraph.setAvgTicks(20);
 		heartRateGraph.setYMin(40);
 		heartRateGraph.setDoMarker(true);
+		heartRateGraph.setLayoutData(new GridData(GridData.FILL, GridData.FILL,
+				true, true));
 
 		final Composite bottomComp = new Composite(shell, SWT.NONE);
 		bottomComp.setLayout(new FillLayout());
